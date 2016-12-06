@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>漫话密码存储 | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="背景密码是用来进行鉴权(身份认证)一种手段,说白了就是证明你是谁。一般鉴权都可以总结为下面3种形式:
+
+你知道什么? (如密码,密码提示问题等)
+你有什么? (如信用卡,token卡等)
+你是什么?(如指纹识别，瞳孔识别等)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="漫话密码存储">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/08/15/漫话密码存储/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="背景密码是用来进行鉴权(身份认证)一种手段,说白了就是证明你是谁。一般鉴权都可以总结为下面3种形式:
+
+你知道什么? (如密码,密码提示问题等)
+你有什么? (如信用卡,token卡等)
+你是什么?(如指纹识别，瞳孔识别等)">
+<meta property="og:updated_time" content="2016-12-06T05:12:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="漫话密码存储">
+<meta name="twitter:description" content="背景密码是用来进行鉴权(身份认证)一种手段,说白了就是证明你是谁。一般鉴权都可以总结为下面3种形式:
+
+你知道什么? (如密码,密码提示问题等)
+你有什么? (如信用卡,token卡等)
+你是什么?(如指纹识别，瞳孔识别等)">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="postcd ..-漫话密码存储" class="article article-type-postcd .." itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/15/漫话密码存储/" class="article-date">
+  <time datetime="2016-08-15T05:05:45.000Z" itemprop="datePublished">2016-08-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/安全/">安全</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      漫话密码存储
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>密码是用来进行鉴权(身份认证)一种手段,说白了就是证明你是谁。一般鉴权都可以总结为下面3种形式:</p>
+<ol>
+<li>你知道什么? (如密码,密码提示问题等)</li>
+<li>你有什么? (如信用卡,token卡等)</li>
+<li>你是什么?(如指纹识别，瞳孔识别等)</li>
+</ol>
+<a id="more"></a>
+<h2 id="常见攻击方式"><a href="#常见攻击方式" class="headerlink" title="常见攻击方式"></a>常见攻击方式</h2><p>常见的针对密码的攻击方式有: </p>
+<ol>
+<li>暴力破解(Brute-force)</li>
+<li>字典攻击(Dictionary Attack)</li>
+<li>彩虹表攻击(Rainbow table attacks)</li>
+</ol>
+<p><strong> 暴力破解 </strong></p>
+<blockquote>
+<p>暴力破解指的是尝试密码空间中所有的可能情况。</p>
+</blockquote>
+<p><strong> 字典攻击 </strong></p>
+<blockquote>
+<p>上面说了暴力搜索空间巨大，然而大部分用户选择的密码都是有一定规律的：如使用生日，姓名，单词缩写，电话，以及以上各种方法的混合。如果把这<br>些常见的密码放到一个文件里，破解密码的时候就直接从这些常见的密码中尝试，这样尝试的空间和暴力破解相比就会小很多。这种存储了许多常见密码的<br>文件就像是一本用户常见密码的字典，字典攻击因此得名。</p>
+</blockquote>
+<p><strong> 彩虹表 </strong></p>
+<blockquote>
+<p>彩虹表：彩虹表是计算机科学时间/空间权衡的典型体现。起核心思想和查找表是类似的，只是相对于查找表，彩虹表需要的存储空间相对较小，查找速度<br>比查找表的O(1)要慢一点。通俗一点说就是：彩虹表牺牲了一点计算速度，换来的好处是较少的空间存储更多的密码数据。举个例子: 如果一个查找表里需要<br>存储所有的10个字符小写字母的字典(至少需要存储用户名，密码hash输出)，需要的磁盘空间为 26^10 * (10+16) / (2^40) ~= 3338T，如果改用彩虹表存储，<br>那么这个彩虹表可能只需要约300G的磁盘空间就能涵盖99.9%的组合。</p>
+</blockquote>
+<h2 id="密码存储的方式"><a href="#密码存储的方式" class="headerlink" title="密码存储的方式"></a>密码存储的方式</h2><h3 id="直接存储"><a href="#直接存储" class="headerlink" title="直接存储"></a>直接存储</h3><p>最简单直观的做法是将密码明文存储到数据库。这种方式数据库的一条记录类似: <user, pwd="">。<br>这种方式最简单但无安全可言。黑客获取了数据库就活得了所有用户信息。因此直接存储明文是不可取的，至少需要对明文做一些处理</user,></p>
+<h3 id="hash存储"><a href="#hash存储" class="headerlink" title="hash存储"></a>hash存储</h3><p>先对明文密码进行hash计算，将hash函数的输出存储到数据库。这里的hash是指密码学中具有单向性和不可逆性的hash函数(如MD5，SHA1等)，不是数据结构中的hash算法。这种方式<br>的数据库中记录格式类似: <user, hash(pwd)="">。这种方法比存明文要好很多，恶意用户获得了密码数据库以后不能直接得到用户的密码。这种方法的问题是：抵抗不了字典和<br>彩虹表攻击，一旦黑客针对数据库构造好彩虹表，就很容易破解了。因此，我们需要一种方法使恶意用户预先构造字典和彩虹表的代价变大。</user,></p>
+<h3 id="密码hash加盐后存储"><a href="#密码hash加盐后存储" class="headerlink" title="密码hash加盐后存储"></a>密码hash加盐后存储</h3><p>密码学中的盐是指一段随机字节串，通常和密码一起作为hash函数的输入。密码加盐后，数据库记录类似 <user, hash(pwd="" +="" salt)="">，这种方法有一些变种如：</user,></p>
+<p><user, hash(hash(pwd)="" +="" salt)="">或 <user, hash(hash(pwd)="" +="" hash(salt))="">，本质都是一样的。加盐后的数据库构造彩虹表需要的巨大存储空间，<br>使得构造查找表和彩虹表的攻击方式失效。</user,></user,></p>
+<ol>
+<li>大大增加构成字典和彩虹表的成本。</li>
+<li>降低相同密码hash值相同的概率。</li>
+</ol>
+<p>关于盐的使用有一点需要说明：加盐的目的是为了增加提前构造字典和彩虹表的代价，并不是为了加密或增加密码hash的计算复杂性。因此，盐并不需要加密存储，<br>通常是明文和用户名一起存储于数据库的。</p>
+<h3 id="自适应加盐存储"><a href="#自适应加盐存储" class="headerlink" title="自适应加盐存储"></a>自适应加盐存储</h3><p>前面说了，密码加盐能有效的对抗提前构造字典和彩虹表的攻击，但是对于暴力破解还是无能为力，对于单个用户的密码，如果黑客采用多台计算机并行计算或者<br>采用GPU等特殊硬件进行暴力破解，能很快的破解较弱的密码。<br>因此，比较理想的密码存储方法要具备2点: </p>
+<ol>
+<li>单次密码存储的计算要尽可能的慢，慢到对单个普通用户的鉴权来说计算时间刚好可以接受，但是对于需要尝试很多密码组合的恶意用户来说，计算代价将会大大增加。</li>
+<li>可以动态的控制密码计算过程的复杂性,这样就可以应对摩尔定律下计算机计算能力越来越强的趋势。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>密码的安全存储目前正确的做法是使用自适应加盐的方法进行存储，具体的说是可以使用pbkdf2, bcrypt, scrypt中的任何一种。本文主要讨论了如何安全的存储密码，<br>如果是保证用户账户的安全，那么除了保证密码存储安全之外，通常需要综合使用下面的各种方法:</p>
+<ol>
+<li>引导选择强度较高的密码</li>
+<li>使用验证码</li>
+<li>密码验证错误以后短时间锁住账号</li>
+<li>敏感操作需要二次鉴权</li>
+<li>使用two-factor验证</li>
+</ol>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ol>
+<li><a href="http://blog.jobbole.com/61872/" target="_blank" rel="external">加盐密码哈希：如何正确使用</a></li>
+<li><a href="http://www.ha97.com/4009.html" target="_blank" rel="external">密码破解之王：Ophcrack彩虹表(Rainbow Tables)</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/08/15/漫话密码存储/" data-id="ciwd2loev00155iu0lttpq3sy" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/08/15/漫话密码存储/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PHP/">PHP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全/">安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/16/认识前端安全/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          认识前端安全
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/07/25/前后端交互过程中的编码/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">前后端交互过程中的编码</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/08/15/漫话密码存储/" data-title="漫话密码存储" data-url="http://blog.wilsonliu.cn/2016/08/15/漫话密码存储/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

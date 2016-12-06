@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>HTTP实体和编码 | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实体和编码每天都有数以亿计的各种媒体对象经由HTTP传送，如图像，文本，影片以及软件程序等。HTTP会确保它的报文被正确的传送，识别，提前以及适当的处理，则需要满足以下条件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP实体和编码">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/04/29/HTTP实体和编码/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="实体和编码每天都有数以亿计的各种媒体对象经由HTTP传送，如图像，文本，影片以及软件程序等。HTTP会确保它的报文被正确的传送，识别，提前以及适当的处理，则需要满足以下条件。">
+<meta property="og:updated_time" content="2016-12-06T05:22:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP实体和编码">
+<meta name="twitter:description" content="实体和编码每天都有数以亿计的各种媒体对象经由HTTP传送，如图像，文本，影片以及软件程序等。HTTP会确保它的报文被正确的传送，识别，提前以及适当的处理，则需要满足以下条件。">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="postcd ..-HTTP实体和编码" class="article article-type-postcd .." itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/29/HTTP实体和编码/" class="article-date">
+  <time datetime="2016-04-29T05:18:20.000Z" itemprop="datePublished">2016-04-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/网络/">网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HTTP实体和编码
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="实体和编码"><a href="#实体和编码" class="headerlink" title="实体和编码"></a>实体和编码</h1><p>每天都有数以亿计的各种媒体对象经由HTTP传送，如图像，文本，影片以及软件程序等。HTTP会确保它的报文被正确的传送，识别，提前以及适当的处理，则需要满足以下条件。<br><a id="more"></a></p>
+<ol>
+<li>可以被正确的识别(通过<code>Content-Type</code>首部说明媒体格式，<code>Content-Language</code>首部说明语言)，以便浏览器和其他客户端能够正确的处理内容</li>
+<li>可以被正确的解包(通过<code>Content-Length</code>首部和<code>Content-Encoding</code>首部)</li>
+<li>是最新的(通过实体验证码和缓存过期控制)</li>
+<li>符合用户的需要(基于<code>Accept</code>系列的内容协商首部)</li>
+<li>在网络上可以快速有效地传输(通过范围请求，差异编码以及其他数据压缩方法)</li>
+<li>完整到达，未被篡改过(通过传输编码首部和<code>Content-MD5</code>校验和首部)</li>
+</ol>
+<p>为了实现上述目标，HTTP/1.1版本定义了以下10个基本实体首部字段。</p>
+<ul>
+<li>Content-Type</li>
+<li>Content-Length</li>
+<li>Content-Language</li>
+<li>Content-Encoding</li>
+<li>Content-Location</li>
+<li>Content-Range</li>
+<li>Content-MD5</li>
+<li>Last-Modified</li>
+<li>Expires</li>
+<li>Allow</li>
+<li>Etag</li>
+<li>Cache-Control</li>
+</ul>
+<h2 id="Content-Length-实体的大小"><a href="#Content-Length-实体的大小" class="headerlink" title="Content-Length:实体的大小"></a>Content-Length:实体的大小</h2><p>Content-Length首部指示出报文中编码后实体主体的字节大小。使用Content-Length首部是为了能够检测出服务器崩溃而导致的报文截尾，并对共享持久连接的多个报文进行正确的分段。</p>
+<p>Content-Length首部对于持久连接是必不可少的，如果响应通过持久连接传输，就可能有另一条HTTP响应紧随其后。客户端通过Content-Length首部就可以知道报文在何处结束，下一条报文从何处开始。因为连接是持久的，客户端无法依赖连接关闭来判别报文的结束。</p>
+<p>在使用分块编码(<code>chunked encoding</code>)时，可以没有Content-Length，此时，数据是分为一系列的块来发送的，每块都有大小说明。</p>
+<p>HTTP/1.1规范中建议对于带有主体但没有Content-Length首部的请求，服务器如果无法确定报文的长度，就应当发送400 Bad Request响应或411 Length Required响应，后一种表明服务器要求收到正确的Content-Length首部。</p>
+<h2 id="实体摘要"><a href="#实体摘要" class="headerlink" title="实体摘要"></a>实体摘要</h2><p>为检测实体主体的数据是否被修改过，发送方可以在生成初始的主体时，生成一个数据的校验和。Content-MD5首部是在对内容作了所有需要的内容编码之后，还没做任何传输编码之前，计算出来的。</p>
+<h2 id="媒体类型和字符集"><a href="#媒体类型和字符集" class="headerlink" title="媒体类型和字符集"></a>媒体类型和字符集</h2><p>Content-Type首部字段说明了实体主体的MIME类型，同时还支持可选的参数来进一步说明内容的类型。<br><code>Content-Type: text/html; charset=iso-8859-4</code></p>
+<p><strong>多部分媒体类型</strong><br>MIME中的multipart电子邮件报文中包含多个报文，它们合在一起作为单一的复杂报文发送。每一部分都是独立的，有各自的描述其内容的集，不同的部分之间用分界字符串连接在一起。<br>HTTP也支持多部分主体。不过，通常只用在下列两种情形之一:提交填写好的表格，或是作为承载若干文档片段的范围响应。<br>HTTP使用Content-Type:multipart/form-data或Content-Type:multipart/mixed这样的首部以及多部分主体来发送这种请求。</p>
+<h2 id="内容编码-Content-Encoding"><a href="#内容编码-Content-Encoding" class="headerlink" title="内容编码 Content-Encoding"></a>内容编码 Content-Encoding</h2><p>HTTP应用程序有时在发送之前需要对内容进行编码，当内容经过编码之后，编好码的数据就防止实体主体中，像往常一样发送给接收方。此时Content-Length变为编码后的长度。<br>同时，我们不希望服务器用客户端无法解码的方式来对内容进行编码，因此，客户端需要把自己能够支持的内容编码列表防止请求的<code>Accept-Encoding</code>首部。</p>
+<h2 id="传输编码和分块编码-Transfer-Encoding"><a href="#传输编码和分块编码-Transfer-Encoding" class="headerlink" title="传输编码和分块编码 Transfer-Encoding"></a>传输编码和分块编码 Transfer-Encoding</h2><p>使用传输编码是为了改变报文中的数据在网络上传输的方式。</p>
+<p><strong>分块编码</strong><br>分块编码是HTTP规范唯一定义的传输编码方式。<br>分块编码把报文分割为若干个大小已知的块。块之间是紧挨着发送的，这样就不需要在发送之前就知道整个报文的大小了。</p>
+<h2 id="范围请求-Range"><a href="#范围请求-Range" class="headerlink" title="范围请求 Range"></a>范围请求 Range</h2><p>范围请求是指客户端实际上只请求文档的一部分，或者说某个范围。比如，下载电影下到一半网络故障，连接中断了，此时可利用范围请求来继续下载。<br><code>Range: bytes=4000-</code><br>代表客户端请求的是文档开头4000字节以后的步伐内容。</p>
+<p>Range首部在流行的点对点(<code>Peer-to-Peer</code>)文件共享客户端软件中得到广泛的应用，他们从不同的对等实体同时下载多媒体文件的不同部分。</p>
+<h2 id="差异编码"><a href="#差异编码" class="headerlink" title="差异编码"></a>差异编码</h2><p>差异编码是HTTP协议的一个扩展，它通过交换对象改变的部分而不是完整的对象来优化传输性能。</p>
+<p><strong>请求报文</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">A-IM: diffe   //Accept-Instance-Manipulation</div><div class="line">If-None-Match: ababdisdksada //验证是否新鲜</div></pre></td></tr></table></figure></p>
+<p><strong>响应报文</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">IM:diffe //差异编码的算法</div><div class="line">Etag: zdsdsfsafsd  //更新后的版本号</div><div class="line">Delta-base: ababdisdksada //差异算法基于的Etag</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/04/29/HTTP实体和编码/" data-id="ciwd2lodw00055iu0b8rk4ocv" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/04/29/HTTP实体和编码/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP权威指南/">HTTP权威指南</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/05/01/HTTP内容分发/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          HTTP内容分发
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/28/端到端的数据/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">端到端的数据</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/04/29/HTTP实体和编码/" data-title="HTTP实体和编码" data-url="http://blog.wilsonliu.cn/2016/04/29/HTTP实体和编码/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

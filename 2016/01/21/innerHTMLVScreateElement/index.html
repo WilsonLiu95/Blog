@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>innerHTMLVScreateElement | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="两者生成dom的方式有什么优劣呢？首先让我们看一个小问题再引入正题～">
+<meta property="og:type" content="article">
+<meta property="og:title" content="innerHTMLVScreateElement">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/01/21/innerHTMLVScreateElement/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="两者生成dom的方式有什么优劣呢？首先让我们看一个小问题再引入正题～">
+<meta property="og:updated_time" content="2016-12-06T04:52:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="innerHTMLVScreateElement">
+<meta name="twitter:description" content="两者生成dom的方式有什么优劣呢？首先让我们看一个小问题再引入正题～">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-innerHTMLVScreateElement" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/21/innerHTMLVScreateElement/" class="article-date">
+  <time datetime="2016-01-21T04:49:25.000Z" itemprop="datePublished">2016-01-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      innerHTMLVScreateElement
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>两者生成dom的方式有什么优劣呢？<br>首先让我们看一个小问题再引入正题～<br><a id="more"></a></p>
+<h2 id="如何重复插入一个相同的html结构呢？"><a href="#如何重复插入一个相同的html结构呢？" class="headerlink" title="如何重复插入一个相同的html结构呢？"></a>如何重复插入一个相同的html结构呢？</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//错误的</span></div><div class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line"><span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">el.appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">'Hi'</span>));</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">10</span>; i &gt; <span class="number">0</span>; --i)</div><div class="line"><span class="built_in">document</span>.body.appendChild(el);</div><div class="line">&#125;;  <span class="comment">//同一元素无法重复插入，</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//正确的　　同时注意不要设置插入多次的元素的id,否则造成错误</span></div><div class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line"><span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">el.appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">'Hi'</span>));</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">10</span>; i &gt; <span class="number">0</span>; --i)</div><div class="line"><span class="built_in">document</span>.body.appendChild(el.cloneNode(<span class="literal">true</span>));</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><strong>上述之所以要用clone，是因为当时我的需求是克隆一个复杂的html结构，而并非生成一个简单的dom元素。</strong></p>
+<h2 id="重排与重绘"><a href="#重排与重绘" class="headerlink" title="重排与重绘"></a>重排与重绘</h2><p>上述方法，虽然能够成功生成相同的dom元素，但是性能上是存在问题的。<br>每次插入dom元素到body后，dom树会重排，之后页面会因为新的dom元素的插入而重新绘制，这两个过程是极其耗时的。<br>因此，推荐使用文档碎片document.createDocumentFragment()。</p>
+<p>使用方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//利用文档碎片 提高性能  frag相当于一个容器 frag并不会插入body而是把frag的内部元素全部插入body</span></div><div class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line"><span class="keyword">var</span> frag = <span class="built_in">document</span>.createDocumentFragment();</div><div class="line"><span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">el.appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">'Hi'</span>));</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">10</span>; i &gt; <span class="number">0</span>; --i)</div><div class="line">frag.appendChild(el.cloneNode(<span class="literal">true</span>));  <span class="comment">//先将生成的dom全部插入frag先，这个过程并不会触发重排与重绘</span></div><div class="line">&#125;;</div><div class="line"><span class="built_in">document</span>.body.appendChild(frag); <span class="comment">//将生成的frag插入body中，将10此重排重绘的过程压缩为一次</span></div></pre></td></tr></table></figure>
+<p>接下来，进入正题的比较</p>
+<h2 id="innerHTML-vs-createElement"><a href="#innerHTML-vs-createElement" class="headerlink" title="innerHTML vs createElement"></a>innerHTML vs createElement</h2><p>生成Dom的两种方式，孰优孰劣呢？<br>就我们的经验看来，innerHTML这种采用字符串拼接生成dom的方式似乎更加方便，并且效率更高。但是那原生的createElement又有什么优势呢？<br>以下，优势观点来自于stack overflow的言论，翻译的也不一点准确，欢迎探讨。</p>
+<ol>
+<li>createElement，当元素插入后仍然保留对dom元素的指针。而innerHTML插入后，并没有对dom元素的指针，你需要再通过getElementById重新选取。</li>
+<li>createElement能够获得事件处理函数，而innerHTML生成的新dom无法获得原先设置的事件处理函数。</li>
+<li>某些情况下，createElement更加快速。如果你需要反复操作字符串，在每次处理后再次插入。每次插入都将进行解析与制作dom，在性能上会很差。</li>
+<li>可读性与可维护上createElement会优秀一些</li>
+</ol>
+<p>下面提供一段封装好了的让你方便的使用createElement的函数<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">isArray</span>(<span class="params">a</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.call(a) === <span class="string">"[object Array]"</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">make</span>(<span class="params">desc</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!isArray(desc)) &#123;</div><div class="line">        <span class="keyword">return</span> make.call(<span class="keyword">this</span>, <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> name = desc[<span class="number">0</span>];</div><div class="line">    <span class="keyword">var</span> attributes = desc[<span class="number">1</span>];</div><div class="line"></div><div class="line">    <span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(name);</div><div class="line"></div><div class="line">    <span class="keyword">var</span> start = <span class="number">1</span>;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> attributes === <span class="string">"object"</span> &amp;&amp; attributes !== <span class="literal">null</span> &amp;&amp; !isArray(attributes)) &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> attr <span class="keyword">in</span> attributes) &#123;</div><div class="line">            el[attr] = attributes[attr];</div><div class="line">        &#125;</div><div class="line">        start = <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = start; i &lt; desc.length; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (isArray(desc[i])) &#123;</div><div class="line">            el.appendChild(make(desc[i]));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            el.appendChild(<span class="built_in">document</span>.createTextNode(desc[i]));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> el;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用方式</p>
+<p><code>make([&quot;p&quot;, &quot;Here is a &quot;, [&quot;a&quot;, { href:&quot;http://www.google.com/&quot; }, &quot;link&quot;], &quot;.&quot;]);</code></p>
+<p>你会得到这样一个html结构</p>
+<p><code>&lt;p&gt;Here is a &lt;a href=&quot;http://www.google.com/&quot;&gt;link&lt;/a&gt;.&lt;/p&gt;</code></p>
+<p>综上，两者各有各的好处。无疑，在大多数情况下，innerHTML更为快速且更加易用，但是使用innerHTML的时候小心上述的那个问题就好。</p>
+<ul>
+<li><p><a href="http://stackoverflow.com/questions/2946656/advantages-of-createelement-over-innerhtml" target="_blank" rel="external">Advantages of createElement over innerHTML? </a></p>
+</li>
+<li><p><a href="http://stackoverflow.com/questions/2946656/advantages-of-createelement-over-innerhtml" target="_blank" rel="external">Advantages of createElement over innerHTML?</a></p>
+</li>
+<li><p><a href="http://stackoverflow.com/questions/737307/javascript-is-it-better-to-use-innerhtml-or-lots-of-createelement-calls-to-ad" target="_blank" rel="external">JavaScript: Is it better to use innerHTML or (lots of) createElement calls to add a complex div structure?</a></p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/01/21/innerHTMLVScreateElement/" data-id="ciwd2loef000m5iu0oxry1i9f" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/01/21/innerHTMLVScreateElement/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/23/webpack替代fekit的折腾小记/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          webpack替代fekit的折腾小记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/16/正则表达小结与小知识点集锦/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">正则表达小结与小知识点集锦</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/01/21/innerHTMLVScreateElement/" data-title="innerHTMLVScreateElement" data-url="http://blog.wilsonliu.cn/2016/01/21/innerHTMLVScreateElement/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

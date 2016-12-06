@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>阅读sea.js源码小结 | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="想解决的问题
+恼人的命名冲突
+烦琐的文件依赖
+
+对应带来的好处 Sea.js 带来的两大好处：
+通过 exports 暴露接口。这意味着不需要命名空间了，更不需要全局变量。这是一种彻底的命名冲突解决方案。
+通过 require 引入依赖。这可以让依赖内置，开发者只需关心当前模块的依赖，其他事情 Sea.js 都会自动处理好。对模块开发者来说，这是一种很好的 关注度分离，能让程序员更多地享受编码的乐">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阅读sea.js源码小结">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/06/26/阅读sea-js源码小结/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="想解决的问题
+恼人的命名冲突
+烦琐的文件依赖
+
+对应带来的好处 Sea.js 带来的两大好处：
+通过 exports 暴露接口。这意味着不需要命名空间了，更不需要全局变量。这是一种彻底的命名冲突解决方案。
+通过 require 引入依赖。这可以让依赖内置，开发者只需关心当前模块的依赖，其他事情 Sea.js 都会自动处理好。对模块开发者来说，这是一种很好的 关注度分离，能让程序员更多地享受编码的乐">
+<meta property="og:updated_time" content="2016-12-06T05:03:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="阅读sea.js源码小结">
+<meta name="twitter:description" content="想解决的问题
+恼人的命名冲突
+烦琐的文件依赖
+
+对应带来的好处 Sea.js 带来的两大好处：
+通过 exports 暴露接口。这意味着不需要命名空间了，更不需要全局变量。这是一种彻底的命名冲突解决方案。
+通过 require 引入依赖。这可以让依赖内置，开发者只需关心当前模块的依赖，其他事情 Sea.js 都会自动处理好。对模块开发者来说，这是一种很好的 关注度分离，能让程序员更多地享受编码的乐">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="postcd ..-阅读sea-js源码小结" class="article article-type-postcd .." itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/26/阅读sea-js源码小结/" class="article-date">
+  <time datetime="2016-06-26T04:59:35.000Z" itemprop="datePublished">2016-06-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      阅读sea.js源码小结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="想解决的问题"><a href="#想解决的问题" class="headerlink" title="想解决的问题"></a>想解决的问题</h2><ol>
+<li>恼人的命名冲突</li>
+<li>烦琐的文件依赖</li>
+</ol>
+<h2 id="对应带来的好处-Sea-js-带来的两大好处："><a href="#对应带来的好处-Sea-js-带来的两大好处：" class="headerlink" title="对应带来的好处 Sea.js 带来的两大好处："></a>对应带来的好处 Sea.js 带来的两大好处：</h2><ol>
+<li>通过 exports 暴露接口。这意味着不需要命名空间了，更不需要全局变量。这是一种彻底的命名冲突解决方案。</li>
+<li>通过 require 引入依赖。这可以让依赖内置，开发者只需关心当前模块的依赖，其他事情 Sea.js 都会自动处理好。对模块开发者来说，这是一种很好的 关注度分离，能让程序员更多地享受编码的乐趣。<a id="more"></a>
+<h2 id="API速查"><a href="#API速查" class="headerlink" title="API速查"></a>API速查</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1. seajs.config</div><div class="line">2. seajs.use</div><div class="line">3. define</div><div class="line">4. require</div><div class="line">5. require.async</div><div class="line">6. exports</div><div class="line">7. module.exports</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="sea-js的执行过程"><a href="#sea-js的执行过程" class="headerlink" title="sea.js的执行过程"></a>sea.js的执行过程</h2><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>用<code>script</code>标签引入sea.js文件，<code>seajs.config(data)</code>启动配置函数，<code>config</code>函数会会合并所有<code>config</code>配置，<code>seajs.use = function(ids, callback)</code>,启用主脚本</p>
+<h3 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h3><p>主脚本启动之后，首先利用<code>request</code>模块请求主脚本(生成script标签插入head标签中)，然后根据正则解析模块<code>define</code>的依赖，并对依赖递归解析其依赖。<br>在运行过程中，通过监听发布者模式，系统内置了8个事件，可用于开发插件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">resolve       -- 将 id 解析成为 uri 时触发</div><div class="line">load          -- 开始加载文件时触发</div><div class="line">fetch         -- 具体获取某个 uri 时触发</div><div class="line">request       -- 发送请求时触发</div><div class="line">define         -- 执行 define 方法时触发</div><div class="line">exec         -- 执行 module.factory 时触发</div><div class="line">config         -- 调用 seajs.config 时触发</div><div class="line">error          -- 加载脚本文件出现 404 或其他错误时触发</div></pre></td></tr></table></figure></p>
+<h3 id="全局挂载"><a href="#全局挂载" class="headerlink" title="全局挂载"></a>全局挂载</h3><p>所有相关数据最后全部挂载在<code>window.seajs</code>下，包括方法及模块数据。</p>
+<h2 id="小知识点"><a href="#小知识点" class="headerlink" title="小知识点"></a>小知识点</h2><h3 id="exports与module-exports"><a href="#exports与module-exports" class="headerlink" title="exports与module.exports"></a>exports与module.exports</h3><p>exports 仅仅是 module.exports 的一个引用。在 factory 内部给 exports 重新赋值时，并不会改变 module.exports 的值。因此给 exports 赋值是无效的，不能用来更改模块接口。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//源码如下</span></div><div class="line"><span class="comment">// Exec factory</span></div><div class="line"><span class="keyword">var</span> factory = mod.factory;</div><div class="line"></div><div class="line"><span class="keyword">var</span> exports = isFunction(factory) ?</div><div class="line">  factory.call(mod.exports = &#123;&#125;, <span class="built_in">require</span>, mod.exports, mod) :</div><div class="line">  factory</div></pre></td></tr></table></figure>
+<h3 id="关于动态依赖"><a href="#关于动态依赖" class="headerlink" title="关于动态依赖"></a>关于动态依赖</h3><p>有时会希望可以使用 require 来进行条件加载：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (todayIsWeekend)</div><div class="line">  <span class="built_in">require</span>(<span class="string">"play"</span>);</div><div class="line"><span class="keyword">else</span></div><div class="line">  <span class="built_in">require</span>(<span class="string">"work"</span>);</div></pre></td></tr></table></figure>
+<p>但请牢记，从静态分析的角度来看，这个模块同时依赖 play 和 work 两个模块，加载器会把这两个模块文件都下载下来。 这种情况下，推荐使用 require.async 来进行条件加载。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//sea.js源码如下</span></div><div class="line"><span class="built_in">require</span>.async = <span class="function"><span class="keyword">function</span>(<span class="params">ids, callback</span>) </span>&#123; <span class="comment">//可传入回调函数</span></div><div class="line">  Module.use(ids, callback, uri + <span class="string">"_async_"</span> + cid())  <span class="comment">//——async_英语标识这个脚本是异步加载的，cid用于清除缓存</span></div><div class="line">  <span class="keyword">return</span> <span class="built_in">require</span> <span class="comment">//返回require方便链式调用</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="在开发时，Sea-js-是如何知道一个模块的具体依赖呢？"><a href="#在开发时，Sea-js-是如何知道一个模块的具体依赖呢？" class="headerlink" title="在开发时，Sea.js 是如何知道一个模块的具体依赖呢？"></a>在开发时，Sea.js 是如何知道一个模块的具体依赖呢？</h3><p>a.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> b = <span class="built_in">require</span>(<span class="string">'./b'</span>);</div><div class="line">  <span class="keyword">var</span> c = <span class="built_in">require</span>(<span class="string">'./c'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Sea.js 在运行 define 时，接受 factory 参数，可以通过 factory.toString() 拿到源码，再通过正则匹配 require 的方式来得到依赖信息。依赖信息是一个数组，比如上面 a.js 的依赖数组是：[‘./b’, ‘./c’]</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//源码如下</span></div><div class="line"></div><div class="line"><span class="comment">// Parse dependencies according to the module factory code</span></div><div class="line"><span class="keyword">if</span> (!isArray(deps) &amp;&amp; isFunction(factory)) &#123;  </div><div class="line">  deps = <span class="keyword">typeof</span> parseDependencies === <span class="string">"undefined"</span> ? [] : parseDependencies(factory.toString()) <span class="comment">//parseDependencies是利用正则解析依赖的一个函数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="时间出发函数Emit"><a href="#时间出发函数Emit" class="headerlink" title="时间出发函数Emit"></a>时间出发函数Emit</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Emit event, firing all bound callbacks. Callbacks receive the same</span></div><div class="line"><span class="comment">// arguments as `emit` does, apart from the event name</span></div><div class="line"><span class="keyword">var</span> emit = seajs.emit = <span class="function"><span class="keyword">function</span>(<span class="params">name, data</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> list = events[name]</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (list) &#123;</div><div class="line">    <span class="comment">// Copy callback lists to prevent modification</span></div><div class="line">    list = list.slice()</div><div class="line"></div><div class="line">    <span class="comment">// Execute event callbacks, use index because it's the faster.</span></div><div class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, len = list.length; i &lt; len; i++) &#123;</div><div class="line">      list[i](data)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> seajs</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>主要看这个部分<code>list = list.slice()</code>,注释是防止拷贝该时间的回调函数，防止修改，困惑了一下。</p>
+<p>原因是Javascript中赋值时，对于引用数据类型，都是传地址。<br>所以这里，如果想防止触发事件的过程中回调函数被更改，必须对这个list数组进行拷贝，而并非只是将list指向events[name]的地址。</p>
+<h3 id="根据debug值配置是否删除动态插入的脚本"><a href="#根据debug值配置是否删除动态插入的脚本" class="headerlink" title="根据debug值配置是否删除动态插入的脚本"></a>根据debug值配置是否删除动态插入的脚本</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Remove the script to reduce memory leak</span></div><div class="line">      <span class="keyword">if</span> (!data.debug) &#123;</div><div class="line">        head.removeChild(node)</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<p>这里思考了蛮久，为什么可以删除动态插入的脚本？这样脚本还会生效吗？</p>
+<p>首先，必须了解计算机内存分为</p>
+<ol>
+<li>静态数据区 (用来存放程序中初始化的全局变量的一块内存区域)</li>
+<li>代码区 (通常用来存放执行代码的一块内存区域)</li>
+<li>栈区 (栈在进程运行时产生，一个进程有一个进程栈。栈用来存储程序临时存放的局部变量，即函数内定义的变量 不包括static 类型的。函数被调用时，他的形参也会被压栈。</li>
+<li>堆区 (用于存放进程运行中被动态分配的内存段，它的大小并且不固定，可动态扩展。当进程调用malloc等分配内存时，新分配的内存被动态的添加到堆上（堆被扩大），当利用free等函数释放内存时，被释放的‘ 内存从堆中剔除)</li>
+</ol>
+<p>这些在Javascript中都被屏蔽了，大部分时候我们都不需要考虑，但是如果要深入了解的话，则是必须要知道的知识。</p>
+<p>首先HTML文档中的JS脚本在计算机中作为指令被读入内存，之后开始执行，CPU开始一条一条指令读取，比如，读取到<code>var cool = &quot;wilson&quot;</code>时，就会在内存中分配一个6字符大小的内存，一个<code>function</code>也一样会在内存中占据一定大小。所以，当指令全部运行完之后，指令本身其实已经没有用了，但是仍然给占据了一部分内存。<br>当你点击按钮触发一个回调函数时，并非去读取指令，而是读取内存中这个回调函数的地址。所以删除这些动态加载的JS文件是没有问题的。</p>
+<h3 id="ID-和路径匹配原则"><a href="#ID-和路径匹配原则" class="headerlink" title="ID 和路径匹配原则"></a>ID 和路径匹配原则</h3><p>所谓 ID 和路径匹配原则 是指，使用 seajs.use 或 require 进行引用的文件，如果是具名模块（即定义了 ID 的模块），会把 ID 和 seajs.use 的路径名进行匹配，如果一致，则正确执行模块返回结果。反之，则返回 null。</p>
+<h3 id="对-module-exports-的赋值需要同步执行，不能放在回调函数里。下面这样是不行的"><a href="#对-module-exports-的赋值需要同步执行，不能放在回调函数里。下面这样是不行的" class="headerlink" title="对 module.exports 的赋值需要同步执行，不能放在回调函数里。下面这样是不行的"></a>对 module.exports 的赋值需要同步执行，不能放在回调函数里。下面这样是不行的</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// x.js</span></div><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</div><div class="line"></div><div class="line">  <span class="comment">// 错误用法</span></div><div class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">module</span>.exports = &#123; <span class="attr">a</span>: <span class="string">"hello"</span> &#125;;</div><div class="line">  &#125;, <span class="number">0</span>);</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//在 y.js 里有调用到上面的 x.js:</span></div><div class="line"></div><div class="line"><span class="comment">// y.js</span></div><div class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">var</span> x = <span class="built_in">require</span>(<span class="string">'./x'</span>);</div><div class="line"></div><div class="line">  <span class="comment">// 无法立刻得到模块 x 的属性 a</span></div><div class="line">  <span class="built_in">console</span>.log(x.a); <span class="comment">// undefined</span></div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/06/26/阅读sea-js源码小结/" data-id="ciwd2lofj00225iu0vnx1xa0k" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/06/26/阅读sea-js源码小结/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/07/18/阅读gulp源码小结/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          阅读gulp源码小结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/05/20/ShellScript编程小结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">ShellScript编程小结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/06/26/阅读sea-js源码小结/" data-title="阅读sea.js源码小结" data-url="http://blog.wilsonliu.cn/2016/06/26/阅读sea-js源码小结/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>前后端交互过程中的编码 | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="起因最近在写PHP，本身对PHP不太熟练。然后遇到编码这个问题，困扰了大半天，索性，系统探索解决一番。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前后端交互过程中的编码">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/07/25/前后端交互过程中的编码/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="起因最近在写PHP，本身对PHP不太熟练。然后遇到编码这个问题，困扰了大半天，索性，系统探索解决一番。">
+<meta property="og:updated_time" content="2016-12-06T05:05:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前后端交互过程中的编码">
+<meta name="twitter:description" content="起因最近在写PHP，本身对PHP不太熟练。然后遇到编码这个问题，困扰了大半天，索性，系统探索解决一番。">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="postcd ..-前后端交互过程中的编码" class="article article-type-postcd .." itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/25/前后端交互过程中的编码/" class="article-date">
+  <time datetime="2016-07-25T05:04:03.000Z" itemprop="datePublished">2016-07-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      前后端交互过程中的编码
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>最近在写PHP，本身对PHP不太熟练。然后遇到编码这个问题，困扰了大半天，索性，系统探索解决一番。<br><a id="more"></a></p>
+<h2 id="前后端交互过程中涉及的编码"><a href="#前后端交互过程中涉及的编码" class="headerlink" title="前后端交互过程中涉及的编码"></a>前后端交互过程中涉及的编码</h2><ol>
+<li>Browser cilent: 首先，浏览器的设置里有设置编码格式，一般设置为UTF-8。</li>
+<li>AJAX request: AJAX异步请求的过程中可以设置编码，<code>contentType:&quot;application/x-www-form-urlencoded; charset=utf-8&quot;</code></li>
+<li>PHP cilent: PHP通过<code>$_POST</code>这个全局变量接收前端POST过来的数据，编码格式为AJAX在请求头中设置的<code>charset=utf-8</code>,PHP操作的过程中可以通过<code>iconv</code>函数库自行转码,例如<code>iconv(&quot;UTF-8&quot;,&quot;GB2312//IGNORE&quot;,$data)</code></li>
+<li>connection: 在PHP与数据库连接的过程中可以设置<code>connection</code>过程中使用的编码格式，例如CodeIgniter框架可以在数据库配置文件database.php中，设置<code>&#39;char_set&#39; =&gt; &#39;latin1&#39;</code></li>
+<li>databases: 数据会先把数据从php客户端的编码转为转为<code>connection</code>中设置的编码，再以字节流的形式传输并插入数据库。</li>
+</ol>
+<h2 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h2><p>常用的编码分为</p>
+<ul>
+<li>UTF-8 万国码，就是它是一种变长的编码方式</li>
+<li>latin1 又称“西欧语言”，是mysql数据库默认设置。为单字节编码</li>
+<li>gb2312 一共收录了7445个字符，包括6763个汉字和682个其它符号。</li>
+<li>GBK 汉字内码扩展规范,支持繁体与简体和许多符号</li>
+</ul>
+<h3 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h3><p>走上国际化就靠它了。现在推荐使用UTF-8，这样外国人打开我们的网站的时候不需要转码，直接就能使用。<br>不多说了，大家都认识。</p>
+<p>看一下他的编码特质<br><strong>UTF-8的设计有以下的多字符组序列的特质</strong></p>
+<ul>
+<li>单字节字符的最高有效比特永远为0。</li>
+<li>多字节序列中的首个字符组的几个最高有效比特决定了序列的长度。最高有效位为110的是2字节序列，而1110的是三字节序列，如此类推。</li>
+<li>多字节序列中其余的字节中的首两个最高有效比特为10。</li>
+</ul>
+<p>UTF-8的这些特质，保证了一个字符的字节序列不会包含在另一个字符的字节序列中。这确保了以字节为基础的部分字符串比对（sub-string match）<br>方法可以适用于在文字中搜索字或词。有些比较旧的可变长度8位编码（如Shift JIS）没有这个特质，故字符串比对的算法变得相当复杂。虽然这增加了UTF-8<br>编码的字符串的信息冗余，但是利多于弊。另外，数据压缩并非Unicode的目的，所以不可混为一谈。即使在发送过程中有部分字节因错误或干扰而完全丢失，<br>还是有可能在下一个字符的起点重新同步，令受损范围受到限制。</p>
+<p>另一方面，由于其字节序列设计，如果一个疑似为字符串的序列被验证为UTF-8编码，那么我们可以有把握地说它是UTF-8字符串。一段两字节随机序列碰巧为合法的UTF-8而非ASCII的概率为32分1。对于三字节序列的概率为256分1，对更长的序列的概率就更低了。</p>
+<h3 id="latin1"><a href="#latin1" class="headerlink" title="latin1"></a>latin1</h3><p><code>latin1</code>编码是单字节编码，向下兼容ASCII，其编码范围是0x00-0xFF，0x00-0x7F之间完全和ASCII一致，0x80-0x9F之间是控制字符，0xA0-0xFF之间是文字符号。</p>
+<p>因为<code>latin1</code>编码范围使用了单字节内的所有空间，在支持<code>latin1</code>的系统中传输和存储其他任何编码的字节流都不会被抛弃。换言之，把其他任何编码的字节流当作<code>latin1</code>编码看待都没有问题。<br>这是个很重要的特性，MySQL数据库默认编码是Latin1就是利用了这个特性，<code>latin1</code>编码是一个8位的容器。</p>
+<p>把一个gbk编码的串写入latin1的表，不会有任何问题，保存的是原封不动的字节流，从表中读取已写入的串也不会有任何问题，且读出的字节流就和当初写入的完全一致。</p>
+<p>读取出来以后，如果在终端下，就会理解成locale类型（如果locale系gbk，当时写入的gbk中文串可正常回显）读取出来以后，如果要写入文件，则文件编码方式即当时写入的字节流编码，如gbk写入的，读出存入文件后，文件编码也是gbk！<br>但是如果混着写（utf-8 + gbk),那编辑器就犯蒙了，就可能会显示会有乱码。</p>
+<p>当然，基于可维护的角度，还是统一为UTF-8编码格式，以免出现乱码。</p>
+<h3 id="GBK与gb2312"><a href="#GBK与gb2312" class="headerlink" title="GBK与gb2312"></a>GBK与gb2312</h3><p>因为历史原因，很多网页和数据库依然使用这个编码格式<br>应该逐步升级为UTF-8。</p>
+<h2 id="文件编码"><a href="#文件编码" class="headerlink" title="文件编码"></a>文件编码</h2><p>每个文件都设置了其编码的格式,大部分推荐使用UTF-8。</p>
+<h3 id="VIM文件编码示例"><a href="#VIM文件编码示例" class="headerlink" title="VIM文件编码示例"></a>VIM文件编码示例</h3><p>一个文本文件，vim打开的时候按某种编码A打开，转换成某种编码B，然后保存的时候转换成另一种编码C，其他文本编辑器类似，可能没有vim这么可以设置和自动完成。<br>编码B：对于整个文件没有影响，只是事关显示的，就是vim与操作系统交互时候使用的编码。</p>
+<p>编码A：使用 set fileencodings=ucs-bom,utf-8,gbk,cp936,latin-1设置。vim 按照设置的顺序检查检测文件的编码。因为某些编码里不存在某些二进制序列的组合，所以如果检测到就认为不是这种编码，检查下一种编码，否则就认为是这一种。因为latin-1可以出现任何二进制序列的组合，所以如果放到第一个，那么将永远以latin-1显示。</p>
+<p>在一般的二进制文件里是不存在字符编码的标记的。但是Unicode里面有个特殊叫做零宽度空格（\FE\FF）而\FF\FE是不存在的编码，所以在Unicode的标准里可以人为的在开始加入这个字符（这个字符在任何字体下都是没有宽度的，在中文字符里面没有任何的效果跟没有一样，是为了照顾东南亚某些语言的显示而设置的）。这样就便于文本编辑器检查字符和字节顺序，但是在代码里include这种文件经常会出问题（这可是个大坑，编译器会认为这是一个非法字符，可是你又看不到）。</p>
+<p>编码B：set fileencoding=utf-8，保存时候使用的编码，保存的时候自动转换为另一种编码。但是如果一开始打开的时候就识别错了编码，再转换的时候一个不存在的字符也是不会完转换的。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="http://blog.chinaunix.net/uid-24098129-id-312645.html" target="_blank" rel="external">mysql的latin1 支持中文 </a></li>
+<li><a href="https://zh.wikipedia.org/wiki/UTF-8" target="_blank" rel="external">UTF-8维基百科</a></li>
+<li><a href="https://segmentfault.com/a/1190000000506269" target="_blank" rel="external">VIM 文件编码识别与乱码处理</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/07/25/前后端交互过程中的编码/" data-id="ciwd2loeo000x5iu0wnnmz2d5" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/07/25/前后端交互过程中的编码/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/15/漫话密码存储/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          漫话密码存储
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/07/18/阅读gulp源码小结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">阅读gulp源码小结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/07/25/前后端交互过程中的编码/" data-title="前后端交互过程中的编码" data-url="http://blog.wilsonliu.cn/2016/07/25/前后端交互过程中的编码/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

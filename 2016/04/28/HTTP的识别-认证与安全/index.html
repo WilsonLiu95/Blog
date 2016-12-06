@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>HTTP的识别,认证与安全 | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第三部分的4章提供了一系列的技术和机器，可用来跟踪身份，进行安全性检测，控制对内容的访问。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP的识别,认证与安全">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/04/28/HTTP的识别-认证与安全/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="第三部分的4章提供了一系列的技术和机器，可用来跟踪身份，进行安全性检测，控制对内容的访问。">
+<meta property="og:updated_time" content="2016-12-06T05:21:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP的识别,认证与安全">
+<meta name="twitter:description" content="第三部分的4章提供了一系列的技术和机器，可用来跟踪身份，进行安全性检测，控制对内容的访问。">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="postcd ..-HTTP的识别-认证与安全" class="article article-type-postcd .." itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/28/HTTP的识别-认证与安全/" class="article-date">
+  <time datetime="2016-04-28T05:17:44.000Z" itemprop="datePublished">2016-04-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/网络/">网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HTTP的识别,认证与安全
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>第三部分的4章提供了一系列的技术和机器，可用来跟踪身份，进行安全性检测，控制对内容的访问。<br><a id="more"></a></p>
+<h2 id="客户端识别与cookie机制-第十一章"><a href="#客户端识别与cookie机制-第十一章" class="headerlink" title="客户端识别与cookie机制 第十一章"></a>客户端识别与cookie机制 第十一章</h2><p>HTTP最初是一个匿名，无状态的请求/响应协议。服务器处理来自客户端的请求，然后向客户端回送一条响应。web服务器几乎没有什么信息可以用来判定是哪个用户发送的请求，也无法记录来访用户的请求序列。</p>
+<h3 id="用户识别机制"><a href="#用户识别机制" class="headerlink" title="用户识别机制"></a>用户识别机制</h3><ul>
+<li>承载用户身份信息的HTTP首部</li>
+<li>客户端IP地址跟踪，通过用户的IP地址对其进行识别</li>
+<li>用户登录，用认证方式来识别用户</li>
+<li>胖URL，一种在URL中嵌入识别信息的技术</li>
+<li>cookie，一种功能强大且高效的持久身份识别技术</li>
+</ul>
+<h3 id="HTTP首部"><a href="#HTTP首部" class="headerlink" title="HTTP首部"></a>HTTP首部</h3><p>下表给出了7种常见的用来承载用户相关信息的HTTP请求首部。后面3个首部是扩展类型的请求首部。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">首部名称</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">From</td>
+<td style="text-align:left">用户的E-mail地址</td>
+</tr>
+<tr>
+<td style="text-align:left">User-Agent</td>
+<td style="text-align:left">用户的浏览器软件</td>
+</tr>
+<tr>
+<td style="text-align:left">Referer</td>
+<td style="text-align:left">用户是从这个页面上依照链接跳转过来的</td>
+</tr>
+<tr>
+<td style="text-align:left">Authorization</td>
+<td style="text-align:left">用户名和密码</td>
+</tr>
+<tr>
+<td style="text-align:left">Client-IP</td>
+<td style="text-align:left">客户端的IP地址</td>
+</tr>
+<tr>
+<td style="text-align:left">X-Forwarded-For</td>
+<td style="text-align:left">客户端的IP地址</td>
+</tr>
+<tr>
+<td style="text-align:left">Cookie</td>
+<td style="text-align:left">服务器产生的ID标签</td>
+</tr>
+</tbody>
+</table>
+<h3 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h3><p>为了使web站点的登录更加简便，HTTP中包含了一种内建机制，可以用<code>WWW-Authenticate</code>首部和<code>Authorization</code>首部向web站点传送用户的相关信息。一旦登录，浏览器就可以不断地在每条发往这个站点的请求中发送这个登录信息了。</p>
+<p>缺点：保密性不强，不能跨站点，不同的站点需要重新输入账户密码。</p>
+<h3 id="胖URL"><a href="#胖URL" class="headerlink" title="胖URL"></a>胖URL</h3><p>可以通过胖URL将服务器上若干个独立的HTTP事务捆绑成一个”会话”或”访问”。用户首次访问这个web站点时，会生成一个唯一的ID，用服务器可以识别的方式将这个ID添加到URL中，然后服务器就会将客户端重新导向这个胖URL。</p>
+<p>问题：</p>
+<ul>
+<li>丑陋的URL</li>
+<li>无法共享URL</li>
+<li>破坏缓存</li>
+<li>额外的服务器负荷</li>
+<li>逃逸口</li>
+<li>在会话间是非持久的</li>
+</ul>
+<h3 id="cookie"><a href="#cookie" class="headerlink" title="cookie"></a>cookie</h3><p>cookie是当前识别用户，实现持久会话的最好方式。最初由网景公司开发，但现在所有的主要浏览器都支持他。</p>
+<h4 id="cookie的类型"><a href="#cookie的类型" class="headerlink" title="cookie的类型"></a>cookie的类型</h4><p>可以笼统的分为:会话cookie和持久cookie。会话cookie和持久cookie的唯一区别就是他们的过期时间。 如果设置了<code>Discard</code>参数，或者没有设置<code>Expires</code>或<code>Max-Age</code>参数来说明扩展的过期时间，这个cookie就是一个会话cookie。</p>
+<h4 id="不同的站点使用不同的cookie"><a href="#不同的站点使用不同的cookie" class="headerlink" title="不同的站点使用不同的cookie"></a>不同的站点使用不同的cookie</h4><p><strong>cookie的域属性</strong><br>产生cookie的服务器可以向<code>Set-Cookie</code>响应首部添加一个Domain属性来控制哪些站点开业看到那个cookie。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Set-cookie: user=&quot;wilson&quot;;domain=&quot;wilsonliu.cn&quot;</div></pre></td></tr></table></figure></p>
+<p>则用户访问的任何以wilsonliu.cn结尾的站点都会讲此cookie发布出去。</p>
+<p><strong>cookie的路径属性</strong><br>cookie规范甚至允许用户将cookie与部分web站点关联起来。可以通过Path属性来实现这一功能。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Set-cookie: year=&quot;21&quot;;domain=&quot;wilsonliu.cn&quot;;path=/year/</div></pre></td></tr></table></figure></p>
+<p>则只会在/year/下的站点时才会发布此cookie。</p>
+<h3 id="cookie成分"><a href="#cookie成分" class="headerlink" title="cookie成分"></a>cookie成分</h3><h4 id="cookie版本0-Netscape"><a href="#cookie版本0-Netscape" class="headerlink" title="cookie版本0 (Netscape)"></a>cookie版本0 (Netscape)</h4><p><strong>Set-Cookie首部</strong>  </p>
+<ul>
+<li>Name=Value</li>
+<li>Expires</li>
+<li>domain</li>
+<li>Path</li>
+<li>Secure</li>
+</ul>
+<p><strong>cookie首部</strong><br>客户端发送请求时，会将所有与域，路径，安全过滤器匹配的未过期的cookie都发送给这个站点。</p>
+<h4 id="cookie版本1-RFC-2965"><a href="#cookie版本1-RFC-2965" class="headerlink" title="cookie版本1 (RFC 2965)"></a>cookie版本1 (RFC 2965)</h4><p><strong>Set-Cookie2</strong></p>
+<ul>
+<li>Name = Value</li>
+<li>Version</li>
+<li>Comment</li>
+<li>CommentURL</li>
+<li>Discard</li>
+<li>domain</li>
+<li>Max-Age</li>
+<li>Path</li>
+<li>Port</li>
+<li>Secure</li>
+</ul>
+<p><strong>cookie首部</strong><br>版本1的cookie会带回与传输的每个cookie相关的附加信息，用来描述每个cookie途径的过滤器。每个匹配的cookie都必须包含来自相应的Set-Cookie2首部的所有Domain,Port和Path属性。</p>
+<h2 id="基本认证机制-第十二章"><a href="#基本认证机制-第十二章" class="headerlink" title="基本认证机制 第十二章"></a>基本认证机制 第十二章</h2><p>基本认证质询首部</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HTTP/1.0 401 Unauthorized</div><div class="line">WWW-Authenticate: Basic realm=quoted-realm</div></pre></td></tr></table></figure>
+<p>响应首部(通过base64编码传输)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Authorization:Basic base64-username-and-password</div></pre></td></tr></table></figure>
+<h2 id="摘要认证-第十三章"><a href="#摘要认证-第十三章" class="headerlink" title="摘要认证 第十三章"></a>摘要认证 第十三章</h2><p>基本认证便捷灵活，但极不安全。用户名与密码明文传输，也没有采取任何措施防止对报文的篡改。安全使用基本认证的唯一方式就是将其与SSL配合使用。</p>
+<p>摘要认证与基本认证兼容。但却更为安全。</p>
+<h3 id="摘要认证的改进"><a href="#摘要认证的改进" class="headerlink" title="摘要认证的改进"></a>摘要认证的改进</h3><ul>
+<li>永远不会以明文的方式在网络上发送密码</li>
+<li>可以防止恶意用户捕获并重放认证的握手过程</li>
+<li>可以有选择地防止对报文内容的篡改</li>
+<li>防范其他几种常见的攻击方式</li>
+</ul>
+<h4 id="用摘要保护密码"><a href="#用摘要保护密码" class="headerlink" title="用摘要保护密码"></a>用摘要保护密码</h4><p>摘要认证遵循的箴言是”绝不通过网络发送密码”。客户端不会发送密码，而是会发送一个“指纹”或密码的”摘要”，这是密码的不可逆扰码。</p>
+<h4 id="单向摘要"><a href="#单向摘要" class="headerlink" title="单向摘要"></a>单向摘要</h4><p>摘要是”对信息主体的浓缩”。摘要是一种单向函数，主要用于将无限的输入值转换为有限的浓缩输出值。常见的摘要函数MD5，会将任意长度的字节序列转换为一个128位的摘要。<br>有时也将摘要函数称为加密的校验和，单向散列函数或指纹函数。</p>
+<h4 id="用随机数防止重放攻击"><a href="#用随机数防止重放攻击" class="headerlink" title="用随机数防止重放攻击"></a>用随机数防止重放攻击</h4><p>使用单向摘要就无需以明文形式发送密码，没有哪个而已用户能够轻易地从摘要中解码出原始密码。</p>
+<p>但是仅仅隐藏密码并不能避免危险，因为即便不知道密码，也可以截获摘要，并重放给服务器。摘要和密码一样好用。</p>
+<p>为防止此类重放攻击的发生服务器可以向客户端发送一个称为随机数(nonce)的特殊令牌，这个数会经常发生变化(可能是每毫秒，或者是每次认证都变化)。客户端在计算摘要之前要先将这个随机数令牌附加到密码上去。</p>
+<h3 id="摘要的计算"><a href="#摘要的计算" class="headerlink" title="摘要的计算"></a>摘要的计算</h3><p>摘要认证的核心就是对公共信息，保密信息和有时限的随机值这个组合的单项摘要。</p>
+<h4 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h4><ol>
+<li>与安全性相关的数据(A1) ——包含有用户名，密码，保护域和随机数等内容</li>
+<li>与报文有关的数据(A2) ——比如URL，请求方法和报文实体，A2有助于防止方法，资源或报文被篡改</li>
+</ol>
+<h4 id="预授权"><a href="#预授权" class="headerlink" title="预授权"></a>预授权</h4><p>在普通的认证方式中，事务结束之前，每条请求都要有一次请求/质询的循环。<br>如果客户端事先知道下一个随机数是什么，就可以取消这个请求/质询循环。</p>
+<ul>
+<li>服务器预先在Authentication-Info成功首部中发送下一个随机数</li>
+<li>服务器允许在一小段时间内使用同一个随机数</li>
+<li>客户端和服务器使用同步的，可预测的随机数生成算法</li>
+</ul>
+<h3 id="应该考虑的实际问题"><a href="#应该考虑的实际问题" class="headerlink" title="应该考虑的实际问题"></a>应该考虑的实际问题</h3><ul>
+<li>多重质询</li>
+<li>差错处理</li>
+<li>保护空间</li>
+<li>重写URI</li>
+<li>缓存</li>
+</ul>
+<h3 id="安全性考虑"><a href="#安全性考虑" class="headerlink" title="安全性考虑"></a>安全性考虑</h3><ul>
+<li>首部篡改</li>
+<li>重放攻击</li>
+<li>多重认证机制</li>
+<li>词典攻击</li>
+<li>恶意代理攻击和中间人攻击</li>
+<li>选择明文攻击</li>
+<li>存储密码</li>
+</ul>
+<h2 id="安全HTTP-第十四章"><a href="#安全HTTP-第十四章" class="headerlink" title="安全HTTP 第十四章"></a>安全HTTP 第十四章</h2><h3 id="保护HTTP的安全"><a href="#保护HTTP的安全" class="headerlink" title="保护HTTP的安全"></a>保护HTTP的安全</h3><ul>
+<li>服务器认证</li>
+<li>客户端认证</li>
+<li>完整性</li>
+<li>加密</li>
+<li>效率</li>
+<li>普适性</li>
+<li>管理的可扩展性</li>
+<li>适应性</li>
+<li>在社会的可行性</li>
+</ul>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p>HTTPS是最流行的HTTP安全形式，它是由网景公司首创，所有主要的浏览器和服务器都支持此协议。<br>使用HTTPS时，所有的HTTP请求和响应数据在发送到网络之前，都要进行加密。HTTPS在HTTP下面提供了一个传输级的密码安全层——可以使用SSL，也可以使用其后继者，传输层安全(<code>Transport Layer Security,TLS</code>)。</p>
+<p>大部分困难的编码及解码工作都是在SSL库中完成的，所以web客户端和服务器在使用安全HTTP时无需过多地修改器协议处理逻辑。在大多数情况下，只需要用SSL的输入/输出调用取代TCP的调用，再增加其他几个调用来配置和管理安全信息就行了。</p>
+<h3 id="数字加密"><a href="#数字加密" class="headerlink" title="数字加密"></a>数字加密</h3><ul>
+<li>密码 对文本进行编码，使偷窥者无法识别的算法</li>
+<li>密钥 改变密码行为的数字化参数</li>
+<li>对称密钥加密系统 编/解码使用相同密钥的算法</li>
+<li>不对称密钥加密系统 编/解码使用不同密钥的算法</li>
+<li>公开密钥加密系统 一种能够使数百万计算机便捷地发送机密报文的系统</li>
+<li>数字签名 用来验证报文未被伪造或篡改的校验和</li>
+<li>数字证书 由一个可信的组织验证和签发的识别信息</li>
+</ul>
+<h3 id="密码"><a href="#密码" class="headerlink" title="密码"></a>密码</h3><p>密码学基于一种名为密码(<code>cipher</code>)的秘密代码。密码是一套编码方案——一种特殊的报文编码方式和一种稍后使用的相应解码方式的结合体。加密之前的原始报文通常被称为明文(<code>plaintext或cleartext</code>)。使用了密码之后的编码报文通常被称作密文(<code>ciphertext</code>)。</p>
+<h3 id="使用密钥的密码"><a href="#使用密钥的密码" class="headerlink" title="使用密钥的密码"></a>使用密钥的密码</h3><p>编码算法和编码机器都可能落入敌人手中，所以大部分机器上都有一些盘号，可以将其设置为大量不同的值以改变密码的工作方式。这些密码参数被称为密钥(<code>key</code>)，要在密码机中输入正确的密钥，解密过程才能正确进行。</p>
+<h3 id="对称密钥加密技术"><a href="#对称密钥加密技术" class="headerlink" title="对称密钥加密技术"></a>对称密钥加密技术</h3><p>编码时使用的密钥值和解码时一样，这就是对称密钥(<code>symmetric-key</code>)。</p>
+<p>保持密钥的机密状态是很重要的，在很多情况下，编/解码算法都是众所周知的，因此密钥就是唯一保密的东西了。好的加密算法会迫使攻击者试遍每一个可能的密钥，才能破解代码。用暴力去尝试所有的密钥值称为枚举攻击(<code>enumeration attack</code>)。可用密钥的数量取决于密钥中的位数，以及可能的密钥中有多少是有效的。</p>
+<p>对称密钥加密技术的缺点之一就是发送者和接受者在互相对话之前，一定要有一个共享的保密密钥。每对通信实体都需要自己的私有密钥。如果有N个节点，每个节点都要和其他所有的N-1个节点进行安全对话，总共需要N的平方个保密密钥，这将是一个管理噩梦。</p>
+<h3 id="公开密钥加密技术"><a href="#公开密钥加密技术" class="headerlink" title="公开密钥加密技术"></a>公开密钥加密技术</h3><p>公开密钥使用了2个非对称密钥:一个用来对主机报文编码，另外一个用来对主机报文解码。编码密钥是众所周知的，但只要主机才知道私有的解密密钥。<br>所有的公开密钥非对称加密系统所面临的共同挑战是，要确保即便有人拥有了下面所有的线索，也无法计算出保密的私有密钥:</p>
+<ul>
+<li>公开密钥</li>
+<li>一小片拦截下来的密文(可通过对网络的嗅探获取)</li>
+<li>一条报文及与之相关的密文(对任意一段文本运行加密器就可以得到)</li>
+</ul>
+<p><strong>混合加密系统和会话密钥</strong></p>
+<p>两节点间通过便捷的公开密钥加密技术建立起安全通信，然后再用那条安全的通道产生并发送临时的随即对称密钥，通过更快的对称加密技术对其余的数据进行加密。</p>
+<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3><p>除了加/解密报文之外，还可以用加密系统对报文进行签名(<code>sign</code>)，以说明是谁编写的报文，同时证明报文未被篡改过。这种技术被称为数字签名(<code>digital signing</code>)。</p>
+<ol>
+<li>客户端将变长报文提取为定长的摘要</li>
+<li>客户端对摘要应用了一个”签名”函数，这个函数会将用户的私有密钥作为参数。因为只有用户才知道私有密钥，所以正确的签名函数会说明签名者就是其所有者。</li>
+<li>一旦计算出签名，客户端就将其附加在报文的末尾，并将报文和签名都发送给对方。</li>
+<li>在接收端，会用公开密钥对签名进行检查，如果不匹配则表示已被篡改。</li>
+</ol>
+<p>使用数字签名的好处</p>
+<ol>
+<li>签名可以验证是作者编写了这条报文，只有作者才会有最机密的私有密钥，因此，只有作者才能计算出这些校验和。校验和就像来自作者的个人“签名”一样。</li>
+<li>签名可以防止报文被篡改，如果有恶意攻击者在报文传输过程中对其进行了修改，校验和就不再匹配了。由于校验和只有作者保密的私有密钥才能产生，所以攻击者无法为篡改了的报文伪造出正确的校验码。</li>
+</ol>
+<h3 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h3><p>数字证书中包含了由某个受信任组织担保的用户或公司的相关信息。数字证书都是由官方的”证书颁发机构”以数字方式签发的。<br>通过HTTPS建立了一个安全web事务之后，现代浏览器都会自动获取所连接服务器的数字证书。如果服务器没有证书，安全连接就会失败。浏览器收到证书的时候会对签名颁发机构进行检查。</p>
+<h3 id="HTTPS——细节介绍"><a href="#HTTPS——细节介绍" class="headerlink" title="HTTPS——细节介绍"></a>HTTPS——细节介绍</h3><p>HTTPS将HTTP协议与一组强大的对称，非对称和基于证书的加密技术结合在一起，使得HTTPS不仅很安全，而且很灵活，很容易在处于无序状态的，分散的全球互联网上进行管理。</p>
+<p>客户端会对web资源执行某事务时，他会去检查URL的方案，如果URL的方案是https，客户端就会打开一条到服务器端口443(而不是传统的http默认的80端口)的连接，然后与服务器进行SSL”握手”，以二进制格式与服务器交换一些SSL安全参数，附加上加密的HTTP命令。</p>
+<h4 id="站点证书的有效性"><a href="#站点证书的有效性" class="headerlink" title="站点证书的有效性"></a>站点证书的有效性</h4><ol>
+<li>日期检测</li>
+<li>签名颁发者可信度检测</li>
+<li>签名检测</li>
+<li>站点身份检测</li>
+</ol>
+<h3 id="通过代理以隧道形式传输安全流量"><a href="#通过代理以隧道形式传输安全流量" class="headerlink" title="通过代理以隧道形式传输安全流量"></a>通过代理以隧道形式传输安全流量</h3><p>客户端通常会用web代理服务器代表它们来访问web服务器。但只要客户端开始用服务器的公开密钥对发往服务器的数据进行加密，代理就再也不能读取HTTP首部了！就无法知道应该将请求转向何处了。<br>为了使HTTPS与代理配合工作，可以用HTTPS SSL隧道协议。使用HTTPS隧道协议，客户端首先告诉代理，它想要连接的安全主机和端口。这是在开始加密之前，以明文形式告知的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/04/28/HTTP的识别-认证与安全/" data-id="ciwd2lodz00065iu0m97bl4pj" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/04/28/HTTP的识别-认证与安全/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP权威指南/">HTTP权威指南</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/28/端到端的数据/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          端到端的数据
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/27/HTTP结构/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">HTTP结构</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/04/28/HTTP的识别-认证与安全/" data-title="HTTP的识别,认证与安全" data-url="http://blog.wilsonliu.cn/2016/04/28/HTTP的识别-认证与安全/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

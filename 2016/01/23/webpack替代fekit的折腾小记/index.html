@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>webpack替代fekit的折腾小记 | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言早就想尝试webpack的，却一直没有时间，恰逢周末，又时值最近在公司实习的时候尝到用fekit做模块化的构建工具的爽。所以就开始以公司的项目结构去使用webpack的，当然最后还是有点问题的，只能折中解决了。公司的方案是前后端完全分离，html代码放在后端服务器上，css，js，images等资源文件放在前端服务器，两者是不同的域名。问过之后，才知道原来是因为，js每次请求会带上cookie">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack替代fekit的折腾小记">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/01/23/webpack替代fekit的折腾小记/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="前言早就想尝试webpack的，却一直没有时间，恰逢周末，又时值最近在公司实习的时候尝到用fekit做模块化的构建工具的爽。所以就开始以公司的项目结构去使用webpack的，当然最后还是有点问题的，只能折中解决了。公司的方案是前后端完全分离，html代码放在后端服务器上，css，js，images等资源文件放在前端服务器，两者是不同的域名。问过之后，才知道原来是因为，js每次请求会带上cookie">
+<meta property="og:updated_time" content="2016-12-06T04:57:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack替代fekit的折腾小记">
+<meta name="twitter:description" content="前言早就想尝试webpack的，却一直没有时间，恰逢周末，又时值最近在公司实习的时候尝到用fekit做模块化的构建工具的爽。所以就开始以公司的项目结构去使用webpack的，当然最后还是有点问题的，只能折中解决了。公司的方案是前后端完全分离，html代码放在后端服务器上，css，js，images等资源文件放在前端服务器，两者是不同的域名。问过之后，才知道原来是因为，js每次请求会带上cookie">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="postcd ..-webpack替代fekit的折腾小记" class="article article-type-postcd .." itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/23/webpack替代fekit的折腾小记/" class="article-date">
+  <time datetime="2016-01-23T04:53:23.000Z" itemprop="datePublished">2016-01-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      webpack替代fekit的折腾小记
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>早就想尝试webpack的，却一直没有时间，恰逢周末，又时值最近在公司实习的时候尝到用fekit做模块化的构建工具的爽。所以就开始以公司的项目结构去使用webpack的，当然最后还是有点问题的，只能折中解决了。公司的方案是前后端完全分离，html代码放在后端服务器上，css，js，images等资源文件放在前端服务器，两者是不同的域名。问过之后，才知道原来是因为，js每次请求会带上cookie，增加了不必要的带宽，所以将其放在前端服务器上，因为script的标签可以跨域引用(这也是jsonp的原理)。 所以主要的目录结构大概是，当然我说的折中是把html直接放进了prd文件夹下，这个之后要说明原因。<br><a id="more"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+html</div><div class="line">+src</div><div class="line">+prd</div><div class="line">+fekit-module</div></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>首先，你需要安装了node.js</p>
+<h3 id="第一步，全局安装"><a href="#第一步，全局安装" class="headerlink" title="第一步，全局安装"></a>第一步，全局安装</h3><p><code>npm install webpack -g</code></p>
+<h3 id="第二步，初始化package-json信息，这个可以直接回车到底"><a href="#第二步，初始化package-json信息，这个可以直接回车到底" class="headerlink" title="第二步，初始化package.json信息，这个可以直接回车到底"></a>第二步，初始化package.json信息，这个可以直接回车到底</h3><p><code>npm init</code></p>
+<h3 id="第三步，局部安装webpack，添加依赖到package-json"><a href="#第三步，局部安装webpack，添加依赖到package-json" class="headerlink" title="第三步，局部安装webpack，添加依赖到package.json"></a>第三步，局部安装webpack，添加依赖到package.json</h3><p>疑问：没有使用过相关构建工具的小伙伴，肯定疑惑。为什么全局安装后还需要局部安装？ 原因：每个项目需要的依赖不同，如果都安装在全局，那么不同项目我们就无法做到定制化的服务，而是大锅粥式的服务，无法满足高效生产的目标。所以需要局部安装。</p>
+<pre><code>npm install webpack --save-dev  //--save-dev 添加依赖到package.json
+</code></pre><p><strong>如何使用依赖？</strong> </p>
+<p>当你再兴建一个文件的时候，就不需要一个个插件安装了，将package.json文件复制到当前文件下，并输入<code>npm install</code>，即通过package.json里的依赖关系，自动把依赖安装好了。当然，其他文件结构还是要自己新建。<br>这里提供一下我的package.json文件。<br>Javascript<br>      {<br>        “name”: “angular”,<br>        “version”: “0.0.0”,<br>        “description”: “practice”,<br>        “main”: “gulpfile.js”,<br>        “scripts”: {<br>          “test”: “echo \”Error: no test specified\” &amp;&amp; exit 1”<br>        },<br>        “author”: “”,<br>        “license”: “BSD-2-Clause”,<br>        “devDependencies”: {<br>          “webpack”: “~1.12.11”,<br>          “style-loader”: “~0.13.0”,<br>          “extract-text-webpack-plugin”: “~1.0.1”,<br>          “file-loader”: “~0.8.5”,<br>          “url-loader”: “~0.5.7”,<br>          “css-loader”: “~0.23.1”<br>        }<br>      }</p>
+<h3 id="第四步-新建配置文件"><a href="#第四步-新建配置文件" class="headerlink" title="第四步 新建配置文件"></a>第四步 新建配置文件</h3><p>默认的配置文件在项目目录下为 <code>webpack.config.js</code>。 简单的操作可以参看下面这个文档。 <a href="http://zhaoda.net/webpack-handbook/usage.html" target="_blank" rel="external">《Webpack 中文指南》</a></p>
+<h3 id="恭喜入坑"><a href="#恭喜入坑" class="headerlink" title="恭喜入坑"></a>恭喜入坑</h3><p>完成，上面四步，可以说你就已经走进了webpack的大门了。 但是，要想个性化的定制服务，理解每一个参数～ 查看了许多博客，讲的都差不多，都不是非常深入。所以，还是得去看官方文档 <a href="https://webpack.github.io/docs/" target="_blank" rel="external">webpack</a></p>
+<p>参数真的是非常多，一个个把认为会用到的敲过去，调了调，试了试。</p>
+<p>接下来，本文，根据自己的学习历程，讲下我用到的重要部分，首先贴一下，项目结构，和配置文档。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">-app  </div><div class="line">+node_modules   </div><div class="line">-prd    </div><div class="line">+html   </div><div class="line">+css    </div><div class="line">+js   </div><div class="line">+images   </div><div class="line">-src    </div><div class="line">+css</div><div class="line">+js   </div><div class="line">+images   </div><div class="line">-gulpfile.js    </div><div class="line">-webpack.config.js    </div><div class="line">-README.md    </div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</div><div class="line"><span class="keyword">var</span> ExtractTextPlugin = <span class="built_in">require</span>(<span class="string">"extract-text-webpack-plugin"</span>);</div><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">    <span class="attr">context</span>: __dirname + <span class="string">"/src"</span>,</div><div class="line">    <span class="attr">entry</span>: &#123;</div><div class="line">      <span class="attr">test</span>:[<span class="string">"./js/test.js"</span>,<span class="string">"./js/test1.js"</span>]</div><div class="line">      test2:<span class="string">"./js/test2.js"</span>,</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">output</span>: &#123;</div><div class="line">        <span class="attr">path</span>: __dirname + <span class="string">"/prd"</span>,</div><div class="line">        <span class="attr">publicPath</span>: <span class="string">"../"</span>,</div><div class="line">        <span class="attr">filename</span>: <span class="string">"js/[name].js"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">module</span>: &#123;</div><div class="line">        <span class="attr">loaders</span>: [</div><div class="line">            &#123; <span class="attr">test</span>: <span class="regexp">/\.css$/</span>,</div><div class="line">              <span class="attr">loader</span>: ExtractTextPlugin.extract(<span class="string">"style-loader"</span>, <span class="string">"css-loader"</span>)&#125;,</div><div class="line">            &#123; <span class="attr">test</span>: <span class="regexp">/\.json$/</span>, <span class="attr">loader</span>: <span class="string">"json"</span>&#125;,</div><div class="line">            &#123;<span class="attr">test</span>:  <span class="regexp">/\.html$/</span>, <span class="attr">loader</span>: <span class="string">"html"</span>&#125;,</div><div class="line">            &#123; <span class="attr">test</span>: <span class="regexp">/\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/</span>,</div><div class="line">    <span class="attr">loader</span>: <span class="string">'url-loader?limit=50000&amp;name=[path][name].[ext]'</span>&#125;</div><div class="line">        ]</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">plugins</span>: [</div><div class="line">       <span class="keyword">new</span> ExtractTextPlugin(<span class="string">"css/[name].css"</span>),</div><div class="line">   ]</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h2><p>因为webpack是基于node.js所有，采用的是common.js的写法，common.js具体语法我在这里就不解释了。</p>
+<p>首先，webpack是需要定义输入与输出文件的，entry为输入，output为输出。</p>
+<h3 id="context"><a href="#context" class="headerlink" title="context"></a>context</h3><p>这个是输入entry的上下文环境，<code>__dirname</code>代指整个项目路径，即directory name。<br>我的项目结构中，开发目录是src，所有在<code>__dirname</code>后面，加上路径的 /src。</p>
+<h3 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h3><p>列出输入的文件<br>      entry: {<br>        test:[“./js/test.js”,”./js/test1.js”],<br>        test2:”./js/test2.js”,<br>        },</p>
+<p>entry有三种定义方式，第一个直接一个字符串路径名，代表唯一一个输入；第二个一个数组代表多个文件对应<br>一个输出，第三种，如上写，以字面对象量的方式，test，test2总共对应着3个输入2个输出。</p>
+<h3 id="output"><a href="#output" class="headerlink" title="output"></a>output</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">output: &#123;</div><div class="line">    <span class="attr">path</span>: __dirname + <span class="string">"/prd"</span>,</div><div class="line">    <span class="attr">publicPath</span>: <span class="string">"../"</span>,</div><div class="line">    <span class="attr">filename</span>: <span class="string">"js/[name].js"</span></div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p>path和entry的一样。代表所有文件输出时的前缀路径。</p>
+<p><strong>这里要加重了</strong><br><code>publicPath: &quot;../&quot;,</code><br>这个属性一直没重视，认为这个和path应该是一样一样的，为何还要多设置一个，所有一开始，我是只设置了path，并没有设置<code>publicPath</code>的。那么这里为什么设置了<code>publicPath: &quot;../&quot;,</code>呢。</p>
+<p>我们通过一个例子来说明原因。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">div &#123;</div><div class="line">    background-image: url(../images/test/icon.jpg);</div><div class="line">&#125;  <span class="comment">//我在src目录下的css文件夹中的index.css中设置背景图片</span></div><div class="line"></div><div class="line"><span class="built_in">require</span>(../images/icon.png) <span class="comment">//我在src目录下的js文件的index.js中引入图片</span></div><div class="line"><span class="keyword">var</span> img = <span class="built_in">require</span>(<span class="string">'../images/test/icon.jpg'</span>);</div><div class="line"><span class="built_in">document</span>.getElementById(<span class="string">'image'</span>).setAttribute(<span class="string">'src'</span>, img);</div><div class="line"></div><div class="line">&lt;!DOCTYPE html&gt;  //prd下的html文件夹中的indexhtml代码</div><div class="line">&lt;html&gt;</div><div class="line">  &lt;head&gt;</div><div class="line">    &lt;meta charset="utf-8"&gt;</div><div class="line">    &lt;title&gt;test&lt;/title&gt;</div><div class="line">    &lt;link href="../css/test.css"&gt;</div><div class="line">  &lt;/head&gt;</div><div class="line">  &lt;body&gt;</div><div class="line">    &lt;div id="test"&gt;</div><div class="line">      test</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;img src="" id="image" /&gt;</div><div class="line">&lt;script src="../js/test.js"&gt;&lt;/script&gt;</div><div class="line"></div><div class="line">  &lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<p>如上所述，我用css与js两种方式引入图片。<br>只是在src中的话，那样是没有问题的，但要是在prd中，因为prd为打包后文件。对于这些地址的处理，是没有太多介绍的，所有只能一个个试。如果我不加<code>publicPath: &quot;../&quot;,</code>的话，那么这些图片对应的路径</p>
+<pre><code>__dirname/prd/css/images/test/icon.png  /第一种
+__dirname/prd/html/images/test/icon.png//第二种
+__dirname/prd/images/test/icon.png //正确路径
+</code></pre><p>所以问题出在了webpack打包的时候，处理地址的时候会将前面”../“给消除了，所有你再到chrome里看他是他的地址是  <code>images/test/icon.jpg</code>，没有前面哪个<code>../</code>,当然了，我的研究也暂时只到这里，你能够通过public设置<code>../</code>来达到目的。而我之所以把html放入prd中，而不是直接在项目目录下，也是因为这个～放在项目目录下，这个<code>publicPath</code>路径就没法统一了，所有只能先折中一下，将html也放入prd中。<br>这样上述的图片就应该正常显示了。<br>但是这样的话，也就达不到我想做的前后端完全分离的效果了，所有，这里先留下一笔，折腾了一天，还没找到解决方案。</p>
+<p><code>filename: &quot;js/[name].js&quot;</code> </p>
+<p>这个是设置输出路径在紧接着前面path与publicPath两个深一层的 设置，这个对应着entry的输入文件，name就是entry对象里的键值名，即test，test2。</p>
+<h3 id="loader"><a href="#loader" class="headerlink" title="loader"></a>loader</h3><p>大体上module里面，我暂时用到的只有loaders，所有这里只讲解loaders。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>: &#123;</div><div class="line">    <span class="attr">loaders</span>: [</div><div class="line">        &#123; <span class="attr">test</span>: <span class="regexp">/\.css$/</span>,</div><div class="line">          <span class="attr">loader</span>: ExtractTextPlugin.extract(<span class="string">"style-loader"</span>, <span class="string">"css-loader"</span>)&#125;,</div><div class="line">        &#123; <span class="attr">test</span>: <span class="regexp">/\.json$/</span>, <span class="attr">loader</span>: <span class="string">"json"</span>&#125;,</div><div class="line">        &#123;<span class="attr">test</span>:  <span class="regexp">/\.html$/</span>, <span class="attr">loader</span>: <span class="string">"html"</span>&#125;,</div><div class="line">        &#123; <span class="attr">test</span>: <span class="regexp">/\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/</span>,</div><div class="line"><span class="attr">loader</span>: <span class="string">'url-loader?limit=50000&amp;name=[path][name].[ext]'</span>&#125;</div><div class="line">    ]</div><div class="line">&#125;,</div></pre></td></tr></table></figure></p>
+<p>loaders是一个数组，数组里是对每种文件的打包处理。因为webpack本身只支持js打包的处理，所有我们要是想把css，json，html，图片一起打包了，就得另外下各种各样的加载器了。<br>简单说下用法，在我们的entry的入口js文件中，<code>require(../images/icon.png)</code>既可以引入一个png格式的文件，此时，webpack打包时，会检测require的文件，并采用对应的规则去解析，如果你没有对应的加载器就会报错，这里我们引入了<code>url-loader</code>，所以他会正确解析打包。</p>
+<blockquote>
+<p>(url-loader用法，<code>url-loader?</code>这里的？表示query查询的意思，后面跟的是规则，当文件大小小于50kb的时候，采用base64格式，如果大于50kb则采用链接)</p>
+</blockquote>
+<p>不得不说，大部分加载器的说明文档还是太简单了，寥寥几句，暂时还不知道如何高度的定制化需求。<a href="http://webpack.github.io/docs/list-of-loaders.html" target="_blank" rel="external">list of loaders</a></p>
+<ul>
+<li>test<br>test中对应的是一个正则表达式，没有什么好说的，不知道的可以找相关的文档看看，也可以点我这篇博客看看<a href="http://segmentfault.com/a/1190000004319104" target="_blank" rel="external">正则表达小结与小知识点集锦</a></li>
+<li><p>loader<br>loader对应的就是，匹配该规则时指定的加载器，比如匹配到json文件时，采用“json”加载器，全称是”json-loader”，当然简称也没有问题。至于css中那个是一个额外的插件，表示匹配到css时采用这个插件，至于插件的声明与用法，请看下面的参数。</p>
+<h3 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h3><p>  plugins: [</p>
+<pre><code>new ExtractTextPlugin(&quot;css/[name].css&quot;),
+</code></pre><p>  ]</p>
+</li>
+</ul>
+<p>plugins 是插件的声明与用法，首先用<code>new</code>实例化一个插件，参数是一个地址规则的字符串，<br>表示把require的css文件输出的地址。<br>插件也有许多，想要高度定制需求，肯定是要结合插件与加载器的。<a href="http://webpack.github.io/docs/list-of-plugins.html" target="_blank" rel="external">list of plugin</a></p>
+<h2 id="使用相关"><a href="#使用相关" class="headerlink" title="使用相关"></a>使用相关</h2><p>使用的时候，直接到项目目录下，使用webpack就会自动执行。<br>当然，输入<code>webpack -w</code>每次更改后会自动执行。<br>另外webpack提供node.js的服务器供调试。<br>满复杂的文档，看花了。<a href="http://webpack.github.io/docs/webpack-dev-server.html" target="_blank" rel="external">webpack-dev-server</a></p>
+<ul>
+<li>安装</li>
+</ul>
+<p><code>npm install webpack-dev-server --save-dev</code></p>
+<ul>
+<li>执行 </li>
+</ul>
+<p><code>webpack-dev-server</code><br>好了，使用的时候，还有许多其他的小细节，可以去探索 。<br>当然大部分时候有这些也足够了。感兴趣的可以继续去探索</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>其实，如果不喜欢折腾也可以来尝试一下fekit，学习成本较低，并且非常强大。<br><a href="http://ued.qunar.com/uedoc/[1]_fekit/[2]_Fekit%E5%AE%89%E8%A3%85%20Installation.html" target="_blank" rel="external">前端构建工具fekit</a><br>文中有什么纰漏，欢迎大家指出～</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/01/23/webpack替代fekit的折腾小记/" data-id="ciwd2loei000r5iu0k42op8w8" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/01/23/webpack替代fekit的折腾小记/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/22/计算机网络基础篇/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          计算机网络基础篇
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/21/innerHTMLVScreateElement/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">innerHTMLVScreateElement</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/01/23/webpack替代fekit的折腾小记/" data-title="webpack替代fekit的折腾小记" data-url="http://blog.wilsonliu.cn/2016/01/23/webpack替代fekit的折腾小记/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
