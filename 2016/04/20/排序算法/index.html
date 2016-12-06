@@ -14,7 +14,7 @@
 <meta property="og:url" content="http://blog.wilsonliu.cn/2016/04/20/排序算法/index.html">
 <meta property="og:site_name" content="WilsonLiu's blog">
 <meta property="og:description" content="排序基本概念排序是计算机程序设计中的一种重要操作，他的功能是将一个数据元素(或记录)的任意排列，重新排列成一个按关键字有序的序列。待排序的记录序列中可能存在两个或两个以上的关键字相等的记录，且在排序前Ri在Rj前面(即i">
-<meta property="og:updated_time" content="2016-12-06T05:42:05.000Z">
+<meta property="og:updated_time" content="2016-12-06T07:16:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序算法">
 <meta name="twitter:description" content="排序基本概念排序是计算机程序设计中的一种重要操作，他的功能是将一个数据元素(或记录)的任意排列，重新排列成一个按关键字有序的序列。待排序的记录序列中可能存在两个或两个以上的关键字相等的记录，且在排序前Ri在Rj前面(即i">
@@ -53,6 +53,8 @@
           <a class="main-nav-link" href="/archives">归档</a>
         
           <a class="main-nav-link" href="/about">关于</a>
+        
+          <a class="main-nav-link" href="/project">项目</a>
         
       </nav>
       
@@ -115,26 +117,129 @@
 <li>待排序记录存储在一组地址连续的存储单元内，同时，另外设一个指示各个记录存储位置的地址向量，在排序过程中不移动记录本身，而是移动地址向量<br>中这些记录的“地址”，在排序结束后再按照地址向量中的值调整记录的存储位置。</li>
 </ol>
 <h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><h3 id="直接插入排序-O-n2"><a href="#直接插入排序-O-n2" class="headerlink" title="直接插入排序 O(n2)"></a>直接插入排序 O(n2)</h3><p>最为简单的一种排序，基本操作为将一个记录插入到已经排好序的有序表中，从而得到一个新的，记录增1的有序表。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">//直接插入排序，更为高效的应该是折半插入排序¬≥</div><div class="line">function insertSort (Arr) &#123;</div><div class="line">  if (Arr.length &lt;= 1) &#123;</div><div class="line">    return Arr;</div><div class="line">  &#125;</div><div class="line">  var temp;</div><div class="line"></div><div class="line">  for (var i = 1; i &lt; Arr.length; i++) &#123; //从1开始，第一个不用排序</div><div class="line">    temp = Arr[i]; //用temp缓存待插入的元素</div><div class="line">    for (var j = i; j &gt;= 0; j--) &#123;</div><div class="line">      if (temp &lt; Arr[j]) &#123;</div><div class="line">        Arr[j + 1] = Arr[j]; //当Arr[i]&lt;Arr[j],则将Arr[j]往后移一位</div><div class="line">      &#125; else if (temp &gt; Arr[j]) &#123;</div><div class="line">        break; //第一种：如果找到了一个比Arr[i]小的Arr[j],则退出循环，结束</div><div class="line">      &#125;</div><div class="line">      //第二种，当j循环，结束</div><div class="line">    &#125;</div><div class="line">    //结束j循环，将temp中缓存的待插入元素插入</div><div class="line">    Arr[j + 1] = temp;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;; //insert结束</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//直接插入排序，更为高效的应该是折半插入排序¬≥</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertSort</span> (<span class="params">Arr</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (Arr.length &lt;= <span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">return</span> Arr;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">var</span> temp;</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; Arr.length; i++) &#123; <span class="comment">//从1开始，第一个不用排序</span></div><div class="line">    temp = Arr[i]; <span class="comment">//用temp缓存待插入的元素</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> j = i; j &gt;= <span class="number">0</span>; j--) &#123;</div><div class="line">      <span class="keyword">if</span> (temp &lt; Arr[j]) &#123;</div><div class="line">        Arr[j + <span class="number">1</span>] = Arr[j]; <span class="comment">//当Arr[i]&lt;Arr[j],则将Arr[j]往后移一位</span></div><div class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (temp &gt; Arr[j]) &#123;</div><div class="line">        <span class="keyword">break</span>; <span class="comment">//第一种：如果找到了一个比Arr[i]小的Arr[j],则退出循环，结束</span></div><div class="line">      &#125;</div><div class="line">      <span class="comment">//第二种，当j循环，结束</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">//结束j循环，将temp中缓存的待插入元素插入</span></div><div class="line">    Arr[j + <span class="number">1</span>] = temp;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;; <span class="comment">//insert结束</span></div></pre></td></tr></table></figure>
 <h3 id="其他插入排序"><a href="#其他插入排序" class="headerlink" title="其他插入排序"></a>其他插入排序</h3><ol>
 <li>折半插入排序 O(n2) 通过减少比较关键字大小次数来优化排序算法。</li>
 <li>2路插入排序</li>
 <li>表插入排序</li>
 </ol>
-<h3 id="希尔排序-O-n3-2"><a href="#希尔排序-O-n3-2" class="headerlink" title="希尔排序 O(n3/2)"></a>希尔排序 O(n3/2)</h3><p>又被称为”缩小增量排序”。基本思想：先将整个待排记录序列分割成若干个子序列分别进行直接插入排序，待整个序列中的记录<br>“基本有序”时，再对全体记录进行一次直接插入排序。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">function shellSort(Arr) &#123;</div><div class="line">  var gap = Math.floor(Arr.length / 2);</div><div class="line">  while (gap &gt; 0) &#123;</div><div class="line">    for (var i = 0; i &lt; Arr.length; i++) &#123;</div><div class="line">      var temp = Arr[i];</div><div class="line">      for (var j = i; j &gt;= gap &amp;&amp; Arr[j - gap] &gt; temp; j -= gap) &#123;</div><div class="line">        Arr[j] = Arr[j - gap];</div><div class="line">      &#125;</div><div class="line">      Arr[j] = temp;</div><div class="line">    &#125;</div><div class="line">    gap = Math.floor(gap / 2);</div><div class="line">  &#125;</div><div class="line">  return Arr;</div><div class="line">&#125;; //shell结束</div></pre></td></tr></table></figure></p>
-<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><h3 id="起泡排序-bubble-sort"><a href="#起泡排序-bubble-sort" class="headerlink" title="起泡排序 bubble sort"></a>起泡排序 bubble sort</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 起泡排序,</div><div class="line">function bibbleSort(Arr) &#123;</div><div class="line">  for (var i = Arr.length - 1; i &gt;= 0; i--) &#123;</div><div class="line">    for (var j = 0; j &lt; i; j++) &#123;</div><div class="line">      if (Arr[j] &gt; Arr[j + 1]) &#123;</div><div class="line">        swap(j, j + 1, Arr);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  return Arr;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h3 id="快速排序-quick-sort"><a href="#快速排序-quick-sort" class="headerlink" title="快速排序 quick sort"></a>快速排序 quick sort</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">// 一趟快速排序的算法是</div><div class="line">// 1.设置初始值x=0,y=n-1,令keyValuey=Arr[0],2.从Arr[y]开始向前遍历，如果keyValue&gt;Arr[y],则将Arr[i]和Arr[y]交换，3.从Arr[x]向后遍历，当keyValue&lt;Arr[x]时；进行Arr[i]和Arr[y]交换，4.结束条件为x==y;</div><div class="line"></div><div class="line">function quickSort (Arr) &#123;</div><div class="line">  if (Arr.length &lt;= 1) &#123;</div><div class="line">    return Arr;</div><div class="line">  &#125;</div><div class="line">  var pivotIndex = Math.floor(Arr.length / 2);</div><div class="line">  var pivot = Arr.splice(pivotIndex, 1);</div><div class="line">  var leftArr = [];</div><div class="line">  var rightArr = [];</div><div class="line">  for (var i = 0; i &lt; Arr.length; i++) &#123;</div><div class="line">    if (Arr[i] &lt; pivot) &#123;</div><div class="line">      leftArr.push(Arr[i]);</div><div class="line">    &#125; else &#123;</div><div class="line">      rightArr.push(Arr[i]);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  return quickSort(leftArr).concat(pivot, quickSort(rightArr));</div><div class="line">  //quickSortOnce结束</div><div class="line">&#125;; //quick结束</div></pre></td></tr></table></figure>
-<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><h3 id="简单的选择排序"><a href="#简单的选择排序" class="headerlink" title="简单的选择排序"></a>简单的选择排序</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//选择排序 从待排序的数组中找出最小值放在最前面</div><div class="line">function selectSort(Arr) &#123;</div><div class="line">  for (var i = 0; i &lt; Arr.length; i++) &#123;</div><div class="line">    for (var j = i; j &lt; Arr.length; j++) &#123;</div><div class="line">      if (Arr[i] &gt; Arr[j]) &#123;</div><div class="line">        swap(Arr, i, j);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  return Arr;</div><div class="line">&#125;; //select结束</div></pre></td></tr></table></figure>
+<h3 id="希尔排序-O-n3-2"><a href="#希尔排序-O-n3-2" class="headerlink" title="希尔排序 O(n3/2)"></a>希尔排序 O(n3/2)</h3><p>又被称为”缩小增量排序”。基本思想：先将整个待排记录序列分割成若干个子序列分别进行直接插入排序，待整个序列中的记录<br>“基本有序”时，再对全体记录进行一次直接插入排序。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">shellSort</span>(<span class="params">Arr</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> gap = <span class="built_in">Math</span>.floor(Arr.length / <span class="number">2</span>);</div><div class="line">  <span class="keyword">while</span> (gap &gt; <span class="number">0</span>) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; Arr.length; i++) &#123;</div><div class="line">      <span class="keyword">var</span> temp = Arr[i];</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> j = i; j &gt;= gap &amp;&amp; Arr[j - gap] &gt; temp; j -= gap) &#123;</div><div class="line">        Arr[j] = Arr[j - gap];</div><div class="line">      &#125;</div><div class="line">      Arr[j] = temp;</div><div class="line">    &#125;</div><div class="line">    gap = <span class="built_in">Math</span>.floor(gap / <span class="number">2</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> Arr;</div><div class="line">&#125;; <span class="comment">//shell结束</span></div></pre></td></tr></table></figure></p>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><h3 id="起泡排序-bubble-sort"><a href="#起泡排序-bubble-sort" class="headerlink" title="起泡排序 bubble sort"></a>起泡排序 bubble sort</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 起泡排序,</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bibbleSort</span>(<span class="params">Arr</span>) </span>&#123;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = Arr.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</div><div class="line">      <span class="keyword">if</span> (Arr[j] &gt; Arr[j + <span class="number">1</span>]) &#123;</div><div class="line">        swap(j, j + <span class="number">1</span>, Arr);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> Arr;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="快速排序-quick-sort"><a href="#快速排序-quick-sort" class="headerlink" title="快速排序 quick sort"></a>快速排序 quick sort</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 一趟快速排序的算法是</span></div><div class="line"><span class="comment">// 1.设置初始值x=0,y=n-1,令keyValuey=Arr[0],2.从Arr[y]开始向前遍历，如果keyValue&gt;Arr[y],则将Arr[i]和Arr[y]交换，3.从Arr[x]向后遍历，当keyValue&lt;Arr[x]时；进行Arr[i]和Arr[y]交换，4.结束条件为x==y;</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">quickSort</span> (<span class="params">Arr</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (Arr.length &lt;= <span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">return</span> Arr;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">var</span> pivotIndex = <span class="built_in">Math</span>.floor(Arr.length / <span class="number">2</span>);</div><div class="line">  <span class="keyword">var</span> pivot = Arr.splice(pivotIndex, <span class="number">1</span>);</div><div class="line">  <span class="keyword">var</span> leftArr = [];</div><div class="line">  <span class="keyword">var</span> rightArr = [];</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; Arr.length; i++) &#123;</div><div class="line">    <span class="keyword">if</span> (Arr[i] &lt; pivot) &#123;</div><div class="line">      leftArr.push(Arr[i]);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      rightArr.push(Arr[i]);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> quickSort(leftArr).concat(pivot, quickSort(rightArr));</div><div class="line">  <span class="comment">//quickSortOnce结束</span></div><div class="line">&#125;; <span class="comment">//quick结束</span></div></pre></td></tr></table></figure>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><h3 id="简单的选择排序"><a href="#简单的选择排序" class="headerlink" title="简单的选择排序"></a>简单的选择排序</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//选择排序 从待排序的数组中找出最小值放在最前面</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">selectSort</span>(<span class="params">Arr</span>) </span>&#123;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; Arr.length; i++) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> j = i; j &lt; Arr.length; j++) &#123;</div><div class="line">      <span class="keyword">if</span> (Arr[i] &gt; Arr[j]) &#123;</div><div class="line">        swap(Arr, i, j);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> Arr;</div><div class="line">&#125;; <span class="comment">//select结束</span></div></pre></td></tr></table></figure>
 <h3 id="树形选择排序"><a href="#树形选择排序" class="headerlink" title="树形选择排序"></a>树形选择排序</h3><p><strong>留</strong></p>
 <h3 id="堆排序-heap-sort"><a href="#堆排序-heap-sort" class="headerlink" title="堆排序 heap sort"></a>堆排序 heap sort</h3><p><strong>留！！！</strong></p>
-<h2 id="归并排序-merging-sort-O-m-n"><a href="#归并排序-merging-sort-O-m-n" class="headerlink" title="归并排序 merging sort O(m+n)"></a>归并排序 merging sort O(m+n)</h2><p>假设初始序列含义n个记录，则可以看成是n个有序的子序列，每个子序列的长度为1,然后两两归并，等到Math.floor(n/2)个长度为2或1的有序子序列，再两两归并，如此重复，直至得到一个长度为n的有序序列为止。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">function mergeSort ()&#123;</div><div class="line">    var merge=function(left,right)&#123;</div><div class="line">        var final=[];</div><div class="line">        while(left.length&amp;&amp;right.length)&#123;</div><div class="line">            final.push(left[0]&lt;=right[0]?left.shift():right.shift());</div><div class="line">        &#125;</div><div class="line">        return final.concat(left.concat(right));</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    var len=this.length;</div><div class="line">    if(len&lt;2)&#123;</div><div class="line">        return this;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    var mid=parseInt(len/2),</div><div class="line">        _left=this.slice(0,mid),</div><div class="line">        _right=this.slice(mid);</div><div class="line">    return merge(_left.mergeSort(),_right.mergeSort());</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h2 id="归并排序-merging-sort-O-m-n"><a href="#归并排序-merging-sort-O-m-n" class="headerlink" title="归并排序 merging sort O(m+n)"></a>归并排序 merging sort O(m+n)</h2><p>假设初始序列含义n个记录，则可以看成是n个有序的子序列，每个子序列的长度为1,然后两两归并，等到Math.floor(n/2)个长度为2或1的有序子序列，再两两归并，如此重复，直至得到一个长度为n的有序序列为止。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeSort</span> (<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> merge=<span class="function"><span class="keyword">function</span>(<span class="params">left,right</span>)</span>&#123;</div><div class="line">        <span class="keyword">var</span> final=[];</div><div class="line">        <span class="keyword">while</span>(left.length&amp;&amp;right.length)&#123;</div><div class="line">            final.push(left[<span class="number">0</span>]&lt;=right[<span class="number">0</span>]?left.shift():right.shift());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> final.concat(left.concat(right));</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> len=<span class="keyword">this</span>.length;</div><div class="line">    <span class="keyword">if</span>(len&lt;<span class="number">2</span>)&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> mid=<span class="built_in">parseInt</span>(len/<span class="number">2</span>),</div><div class="line">        _left=<span class="keyword">this</span>.slice(<span class="number">0</span>,mid),</div><div class="line">        _right=<span class="keyword">this</span>.slice(mid);</div><div class="line">    <span class="keyword">return</span> merge(_left.mergeSort(),_right.mergeSort());</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <h2 id="基数排序-radix-Sorting"><a href="#基数排序-radix-Sorting" class="headerlink" title="基数排序 radix Sorting"></a>基数排序 radix Sorting</h2><p><strong>留</strong></p>
-<h2 id="各种排序算法比较"><a href="#各种排序算法比较" class="headerlink" title="各种排序算法比较"></a>各种排序算法比较</h2><h3 id="以上用到的swap函数"><a href="#以上用到的swap函数" class="headerlink" title="以上用到的swap函数"></a>以上用到的swap函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">//swap函数</div><div class="line">function swap(Arr, firPos, secPos) &#123;</div><div class="line">  var temp = Arr[firPos];</div><div class="line">  Arr[firPos] = Arr[secPos];</div><div class="line">  Arr[secPos] = temp;</div><div class="line">  return Arr; //返回生成的数组</div><div class="line">&#125; //swap结束</div></pre></td></tr></table></figure>
+<h2 id="各种排序算法比较"><a href="#各种排序算法比较" class="headerlink" title="各种排序算法比较"></a>各种排序算法比较</h2><h3 id="以上用到的swap函数"><a href="#以上用到的swap函数" class="headerlink" title="以上用到的swap函数"></a>以上用到的swap函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//swap函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">swap</span>(<span class="params">Arr, firPos, secPos</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> temp = Arr[firPos];</div><div class="line">  Arr[firPos] = Arr[secPos];</div><div class="line">  Arr[secPos] = temp;</div><div class="line">  <span class="keyword">return</span> Arr; <span class="comment">//返回生成的数组</span></div><div class="line">&#125; <span class="comment">//swap结束</span></div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.wilsonliu.cn/2016/04/20/排序算法/" data-id="ciwd2vs2v003e7uu0l3grzo81" class="article-share-link">分享</a>
+
+
+  <!-- /赞赏代码开始 -->
+
+  <!-- css -->
+  <style type="text/css">
+      .center {
+          text-align: center;
+      }
+      .hidden {
+          display: none;
+      }
+    .donate_bar a.btn_donate{
+      display: inline-block;
+      width: 82px;
+      height: 82px;
+      background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
+      _background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
+
+      <!-- http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif
+           因为本 hexo 生成的博客所用的 theme 的 a:hover 带动画效果，
+         为了在让打赏按钮显示效果正常 而 添加了以下几行 css，
+         嵌入其它博客时不一定要它们。 -->
+      -webkit-transition: background 0s;
+      -moz-transition: background 0s;
+      -o-transition: background 0s;
+      -ms-transition: background 0s;
+      transition: background 0s;
+      <!-- /让打赏按钮的效果显示正常 而 添加的几行 css 到此结束 -->
+    }
+
+    .donate_bar a.btn_donate:hover{ background-position: 0px -82px;}
+    .donate_bar .donate_txt {
+      display: block;
+      color: #9d9d9d;
+      font: 14px/2 "Microsoft Yahei";
+    }
+    .bold{ font-weight: bold; }
+  </style>
+  <!-- /css -->
+
+    <!-- Donate Module -->
+    <div id="donate_module">
+
+  <!-- btn_donate & tips -->
+  <div id="donate_board" class="donate_bar center">
+    <a id="btn_donate" class="btn_donate" target="_self" href="javascript:;" title="Donate 打赏"></a>
+    <span class="donate_txt">
+      欣赏此文？求鼓励，求支持！
+    </span>
+      
+    
+  </div>
+  <!-- /btn_donate & tips -->
+
+  <!-- donate guide -->
+    
+  <div id="donate_guide" class="donate_bar center hidden">
+
+    <a href="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="用微信扫一扫哦~" class="fancybox" rel="article0">
+      <img src="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="微信打赏 Colin" height="190px" width="190px"/>
+    </a>
+        
+        &nbsp;&nbsp;
+
+    <a href="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="用支付宝扫一扫即可~" class="fancybox" rel="article0">
+      <img src="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="支付宝打赏 Colin" height="190px" width="190px"/>
+    </a>
+
+    <span class="donate_txt">
+      欣赏此文？求鼓励，求支持！
+    </span>
+
+  </div>
+  <!-- /donate guide -->
+
+  <!-- donate script -->
+  <script type="text/javascript">
+    document.getElementById('btn_donate').onclick = function() {
+      $('#donate_board').addClass('hidden');
+      $('#donate_guide').removeClass('hidden');
+    }
+
+    function donate_on_web(){
+      $('#donate').submit();
+        }
+
+    var original_window_onload = window.onload;
+        window.onload = function () {
+            if (original_window_onload) {
+                original_window_onload();
+            }
+            document.getElementById('donate_board_wdg').className = 'hidden';
+    }
+  </script>
+  <!-- /donate script -->
+</div>
+<!-- /Donate Module -->
+   
+  <!-- /赞赏代码结束 -->
+
+
+
+      <a data-url="http://blog.wilsonliu.cn/2016/04/20/排序算法/" data-id="ciwd781bg0016wfu0mh3wmg3w" class="article-share-link">分享</a>
       
         <a href="http://blog.wilsonliu.cn/2016/04/20/排序算法/#ds-thread" class="article-comment-link">留言</a>
       
@@ -168,11 +273,13 @@
   
 </article>
 
+
       <div class="duoshuo">
 	<!-- 多说评论框 start -->
 	<div class="ds-thread" data-thread-key="2016/04/20/排序算法/" data-title="排序算法" data-url="http://blog.wilsonliu.cn/2016/04/20/排序算法/"></div>
 	<!-- 多说评论框 end -->
 </div>
+
 
 
 
@@ -186,22 +293,13 @@
     <div class="widget">
       <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
       <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>微信：<a href="#">liu1995sheng</a></p>
       <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
-      
       <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
       <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
     </div>
 </div>
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">赞助我</h3>
-    <div class="widget" style="text-align:center;">
-      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
-      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
-    </div>
-  </div>
   
     
   <div class="widget-wrap">
@@ -326,6 +424,8 @@
     <a href="/archives" class="mobile-nav-link">归档</a>
   
     <a href="/about" class="mobile-nav-link">关于</a>
+  
+    <a href="/project" class="mobile-nav-link">项目</a>
   
 </nav>
     
