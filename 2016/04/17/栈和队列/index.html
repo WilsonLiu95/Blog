@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <html xmlns:wb="http://open.weibo.com/wb">
+
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+  
+  <title>栈和队列 | WilsonLiu&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="是限定仅在表尾进行插入或删除操作的线性表。因此对于栈来说，表尾端有其特殊含义，称为栈顶（top）， 表头端称为栈底(base)。因此，栈又称为后进先出的线性表。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="栈和队列">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/04/17/栈和队列/index.html">
+<meta property="og:site_name" content="WilsonLiu's blog">
+<meta property="og:description" content="是限定仅在表尾进行插入或删除操作的线性表。因此对于栈来说，表尾端有其特殊含义，称为栈顶（top）， 表头端称为栈底(base)。因此，栈又称为后进先出的线性表。">
+<meta property="og:updated_time" content="2016-12-06T05:39:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="栈和队列">
+<meta name="twitter:description" content="是限定仅在表尾进行插入或删除操作的线性表。因此对于栈来说，表尾端有其特殊含义，称为栈顶（top）， 表头端称为栈底(base)。因此，栈又称为后进先出的线性表。">
+  
+  
+    <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.wilsonliu.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">WilsonLiu&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="postcd ..-栈和队列" class="article article-type-postcd .." itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/17/栈和队列/" class="article-date">
+  <time datetime="2016-04-17T05:39:23.000Z" itemprop="datePublished">2016-04-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据结构/">数据结构</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      栈和队列
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>是限定仅在表尾进行插入或删除操作的<strong>线性表</strong>。因此对于栈来说，表尾端有其特殊含义，称为栈顶（top）， 表头端称为栈底(base)。因此，栈又称为<strong>后进先出</strong>的线性表。<br><a id="more"></a></p>
+<h2 id="栈的应用举例"><a href="#栈的应用举例" class="headerlink" title="栈的应用举例"></a>栈的应用举例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">//行编辑器</div><div class="line">function lineEdit(str) &#123;</div><div class="line">  var stack = [];</div><div class="line">  for (var i = 0; i &lt; str.length; i++) &#123;</div><div class="line">    switch (str.charAt(i)) &#123;</div><div class="line">      case &quot;#&quot;: //#代表退一个</div><div class="line">        console.log(&quot;出栈&quot; + stack.pop());</div><div class="line">        break;</div><div class="line">      case &quot;@&quot;: //清空</div><div class="line">        console.log(&quot;清空&quot; + stack);</div><div class="line">        stack = [];</div><div class="line">        break;</div><div class="line">      default: //压入</div><div class="line">        stack.push(str.charAt(i));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  console.log(stack.join(&quot;&quot;));</div><div class="line">&#125;</div><div class="line">lineEdit(&quot;nihaoyaa#wohenhao&quot;);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">//表达式求值</div><div class="line">/*</div><div class="line">四则运算的法则</div><div class="line">1.先乘除，后加减</div><div class="line">2. 从左算到右</div><div class="line">3. 先括号内，再括号外</div><div class="line">*/</div><div class="line">function evaluateExpression(str) &#123;</div><div class="line">  var num = &#123;</div><div class="line">    &quot;+&quot;: 0,</div><div class="line">    &quot;-&quot;: 1,</div><div class="line">    &quot;*&quot;: 2,</div><div class="line">    &quot;/&quot;: 3,</div><div class="line">    &quot;(&quot;: 4,</div><div class="line">    &quot;)&quot;: 5,</div><div class="line">    &quot;#&quot;: 6</div><div class="line">  &#125;;</div><div class="line">  var pri = [  //各个运算符的优先级</div><div class="line">    [1, 1, -1, -1, -1, 1, 1],</div><div class="line">    [1, 1, -1, -1, -1, 1, 1],</div><div class="line">    [1, 1, 1, 1, -1, 1, 1],</div><div class="line">    [1, 1, 1, 1, -1, 1, 1],</div><div class="line">    [-1, -1, -1, -1, -1, 0, null],</div><div class="line">    [1, 1, 1, 1,null, 1, 1],</div><div class="line">    [-1,-1,-1,-1,-1,null,0]</div><div class="line">  ];</div><div class="line"></div><div class="line">  function precede(firChar, secChar) &#123; //比较输入的两个字符的优先级</div><div class="line">    var firNum = num[firChar],</div><div class="line">      secNum = num[secChar];</div><div class="line">    return pri[firNum][secNum];</div><div class="line">  &#125;</div><div class="line">  var opNum = [], //操作数</div><div class="line">    opChar = [&quot;#&quot;], //操作符</div><div class="line">    i = 0;</div><div class="line">  while (str.charAt(i)!=&quot;#&quot; || opChar[opChar.length-1]!=&quot;#&quot;) &#123;  //查询到最后的#则表示运算表达式结束</div><div class="line">    var numPush=&quot;&quot;; //要压入的数字 可能是任何位数的数字</div><div class="line">    while (!(str.charAt(i) in num)) &#123;</div><div class="line">      numPush+=str.charAt(i++); //拼接数字</div><div class="line">    &#125;</div><div class="line">    if (numPush!==&quot;&quot;) &#123;</div><div class="line">      opNum.push(numPush); //如果numPush不为空，则压入</div><div class="line">    &#125;</div><div class="line">    if ((str.charAt(i) in num))&#123; //如果当前位为运算符</div><div class="line">      var tmp = opChar[opChar.length - 1];</div><div class="line">      switch (precede(opChar[opChar.length - 1],str.charAt(i))) &#123; //调用precede方法比较运算符优先级</div><div class="line">        case -1: //小于，则将运算符压入</div><div class="line">          opChar.push(str.charAt(i++));</div><div class="line">          break;</div><div class="line">        case 0:</div><div class="line">          opChar.pop(); //将运算符推出</div><div class="line">          i++;</div><div class="line">          break;</div><div class="line">        case 1:</div><div class="line">        var firstNum = opNum.pop(),</div><div class="line">            secondeNum =  opNum.pop(),</div><div class="line">            optionChar = opChar.pop(),</div><div class="line">          var result = eval(secondeNum+optionChar+firstNum); //拼接运算表达式</div><div class="line"></div><div class="line">          opNum.push(result);</div><div class="line">          break;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  return opNum[opNum.length-1];</div><div class="line">&#125;</div><div class="line">console.log(evaluateExpression(&quot;1+2+2*(2+6/2)#&quot;));</div></pre></td></tr></table></figure>
+<h2 id="栈与递归的实现"><a href="#栈与递归的实现" class="headerlink" title="栈与递归的实现"></a>栈与递归的实现</h2><p>通常，当在一个函数内，调用另外一个函数时，在运行被调用函数前，系统必须先完成3件事情，</p>
+<ol>
+<li>将所有的实参，返回地址等信息传递给被调用函数保存</li>
+<li>为被调用函数的局部变量分配存储区</li>
+<li>将控制转移到被调用函数的入口</li>
+<li>而被调用函数返回调用函数之前，系统也应该完成3件事情。</li>
+<li>保存被调用函数的计算结果</li>
+<li>释放被调用函数的数据区</li>
+<li>依照被调用函数保存的返回地址将控制转移到调用函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">//n阶汉尼塔</div><div class="line">// n代表总共的圆盘数量，x,y,z代表3个hanoi塔</div><div class="line">// 将x上的n个圆盘移到z上，并以y为辅助</div><div class="line">function hanoi(n, x, y, z) &#123;</div><div class="line">  if (n == 1) &#123;</div><div class="line">    move(x, z);</div><div class="line">  &#125; else &#123;</div><div class="line">    hanoi(n - 1, x, z, y);</div><div class="line">    move(x, z);</div><div class="line">    hanoi(n-1, y, x, z);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var x = [9,8,7,6,5,4,3, 2, 1],</div><div class="line">  y = [],</div><div class="line">  z = [];</div><div class="line"></div><div class="line">function move(x, z) &#123;</div><div class="line">  var tmp = x.pop();</div><div class="line">  z.push(tmp);</div><div class="line">&#125;</div><div class="line">hanoi(9, x, y, z);</div></pre></td></tr></table></figure>
+<h1 id="队列-queue"><a href="#队列-queue" class="headerlink" title="队列 queue"></a>队列 queue</h1><p>和栈相反，队列是一种先进先出的<strong>线性表</strong>。他只允许在表的一端进行插入，而在另一端进行删除元素。 允许插入的一端叫做队尾(rear),允许删除的一端则称为队头(front)</p>
+<p><strong>链队列</strong></p>
+<p><strong>循环队列</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var waitQueue = [</div><div class="line">    [],</div><div class="line">    [],</div><div class="line">    [],</div><div class="line">    []</div><div class="line">  ], //等待队列</div><div class="line">  closeTime,</div><div class="line">  totolCus=0,</div><div class="line">  eventQueue = [], //事件列表</div><div class="line">  customQueue = [];</div><div class="line">function Custom() &#123;</div><div class="line">  this.arrivalTime = new Date();</div><div class="line">  this.nextCustom = Math.floor(Math.random() * 5);</div><div class="line">  this.duration = Math.floor(Math.random() * 30);</div><div class="line">  this.queue = &quot;&quot;; //排哪一队</div><div class="line">  this.leaveTime = function() &#123;</div><div class="line">    this.leaveTime = new Date();</div><div class="line">  &#125;;</div><div class="line">  this.totalTime = function() &#123;</div><div class="line">    if (typeof this.leaveTime !== &quot;function&quot;) &#123;</div><div class="line">      this.totalTime = Math.floor((this.leaveTime - this.arrivalTime) / 1000);</div><div class="line">    &#125; else &#123;</div><div class="line">      alert(&quot;离开时间尚未设定&quot;);</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function Event(type) &#123;</div><div class="line">  this.type = type;</div><div class="line">  this.custom = function() &#123;</div><div class="line">    this.custom = new Custom();</div><div class="line">  &#125;;</div><div class="line">&#125;</div><div class="line">//用户到达事件处理函数</div><div class="line">function arrEvent(custom, waitQueue) &#123;</div><div class="line">  var tmp = 0;</div><div class="line">  for (var i = 0; i &lt; waitQueue.length; i++) &#123;</div><div class="line">    if (waitQueue[tmp].length &gt; waitQueue[i].length) &#123;</div><div class="line">      tmp = i;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  custom.queue = tmp; //达到后，将其插入排队</div><div class="line">  waitQueue[tmp].push(custom);</div><div class="line">  if (waitQueue[tmp].length == 1) &#123;</div><div class="line">    setTimeout(function () &#123;</div><div class="line">      leaveCus(waitQueue[tmp][0]);</div><div class="line">    &#125;, waitQueue[tmp][0].duration);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 用户离开事件处理函数</div><div class="line">function leaveEvent(custom, waitQueue) &#123;</div><div class="line">  custom.leaveTime(); //标志离开时间</div><div class="line">  custom.totalTime(); //计算总时间</div><div class="line">  customQueue.push(waitQueue[custom.queue].shift()); //将离开的用户压入用户数组中</div><div class="line">  if (waitQueue[custom.queue]) &#123;</div><div class="line">  setTimeout(leaveCus(waitQueue[custom.queue][0]),waitQueue[custom.queue][0].duration);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">//银行开业，初始化顾客</div><div class="line">function openBank() &#123;</div><div class="line">  var firEvent = new Event(0);</div><div class="line">  firEvent.custom();</div><div class="line">  eventQueue.push(firEvent);</div><div class="line">  startCus(firEvent.custom);</div><div class="line">&#125;</div><div class="line">//生成用户到达事件，递归生成</div><div class="line">function startCus(custom) &#123;</div><div class="line">  setTimeout(function() &#123;</div><div class="line">    var eventTmp = new Event(0);</div><div class="line">    eventTmp.custom(); //新建客户</div><div class="line">    if (eventTmp.custom.arrivalTime.getTime()&gt;closeTime) &#123;</div><div class="line">      console.log(&quot;不欢迎新顾客&quot;);</div><div class="line">      return &quot;不欢迎新顾客&quot;;</div><div class="line">    &#125;</div><div class="line">    eventQueue.push(eventTmp);</div><div class="line">    totolCus++;</div><div class="line">    startCus(eventTmp.custom);</div><div class="line">  &#125;, custom.nextCustom);</div><div class="line">&#125;</div><div class="line">// 生成用户离开事件，递归离开</div><div class="line">function leaveCus(custom) &#123;</div><div class="line">  var eventTmp = new Event(1);</div><div class="line">  eventTmp.custom = custom;</div><div class="line">  eventQueue.push(eventTmp);</div><div class="line">  // setTimeout(leaveCus(waitQueue[eventTmp.custom.queue][1]), waitQueue[eventTmp.custom.queue][1].duration);</div><div class="line">&#125;</div><div class="line">function bankInit() &#123;</div><div class="line">  closeTime = new Date();</div><div class="line">  closeTime = closeTime.getTime() + 1000;</div><div class="line">  openBank();</div><div class="line">  while (eventQueue) &#123;</div><div class="line">    var ev = eventQueue.shift();</div><div class="line">    switch (ev.type) &#123;</div><div class="line">      case 0:</div><div class="line">        arrEvent(ev.custom, waitQueue);</div><div class="line">        break;</div><div class="line">      case 1:</div><div class="line">        leaveEvent(ev.custom, waitQueue);</div><div class="line">        break;</div><div class="line">      default:</div><div class="line">        alert(&quot;事件无效&quot;);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.wilsonliu.cn/2016/04/17/栈和队列/" data-id="ciwd2t1tz00327uu0gbosb0fh" class="article-share-link">分享</a>
+      
+        <a href="http://blog.wilsonliu.cn/2016/04/17/栈和队列/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/18/串/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          串
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/16/线性表/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">线性表</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/04/17/栈和队列/" data-title="栈和队列" data-url="http://blog.wilsonliu.cn/2016/04/17/栈和队列/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+    <h3 class="widget-title">联系方式</h3>
+    <div class="widget">
+      <p>网站：<a href="https://wilsonliu.cn">https://wilsonliu.cn</a></p>
+      <p>邮箱：<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</a></p>
+      <p>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=527622467&site=qq&menu=yes">527622467</a></p>
+      
+      <p>github：<a href="https://github.com/WilsonLiu95">WilsonLiu95</a></p>
+      <p><wb:follow-button uid="5605115512" type="red_3" width="100px" height="24" >微博</wb:follow-button></p>
+    </div>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">赞助我</h3>
+    <div class="widget" style="text-align:center;">
+      <img src='http://wilsonliu.cn/cdn/img/201612/db848f822edf4ea1a272dc1039993375.JPG' style='width:80%;' />
+      <img src='http://wilsonliu.cn/cdn/img/201612/cb81c8e900642b4a8589f25d6ae7d17a.JPG' style='width:48%; display:none' />
+    </div>
+  </div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title categories">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/安全/">安全</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能/">性能</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/网络/">网络</a><span class="category-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTTP权威指南/" style="font-size: 15px; color: #7741f7">HTTP权威指南</a> <a href="/tags/Javascript/" style="font-size: 20px; color: #ee82ee">Javascript</a> <a href="/tags/PHP/" style="font-size: 12.5px; color: #3c21fb">PHP</a> <a href="/tags/安全/" style="font-size: 10px; color: #00f">安全</a> <a href="/tags/数据结构/" style="font-size: 17.5px; color: #b362f2">数据结构</a> <a href="/tags/计算机网络/" style="font-size: 17.5px; color: #b362f2">计算机网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/12/04/JavaScript函数式编程/">JavaScript函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/21/漫谈Web缓存/">漫谈Web缓存</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/16/认识前端安全/">认识前端安全</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/15/漫话密码存储/">漫话密码存储</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/25/前后端交互过程中的编码/">前后端交互过程中的编码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+     
+
+  <div class="widget-wrap">
+    <h3 class="widget-title lastest-comments">最新评论</h3>
+    <div class="widget">
+         <div class="hot-comments">
+    <!-- 多说最新评论 start -->
+	<div class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-title="1" data-show-admin="1" data-excerpt-length="70"></div>
+    <!-- 多说最新评论 end -->
+</div>
+    </div>
+  </div>
+
+
+
+  
+     
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title archive">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+        <ul id='link-list'>
+        <li><a href="https://wilsonliu.cn/">wilsonliu的个人网站</a></li>
+        <li><a href="https://segmentfault.com/blog/wilson">segmentfault</a></li>
+        <li><a href="http://blog.csdn.net/liusheng95">CSDN博客</a></li>
+        <li><a href="https://github.com/WilsonLiu95">github</a></li>
+        <li><a href="https://vuefe.cn/v2/guide/installation.html">vue2.0文档</a></li>
+        
+        </ul>
+    </div>
+  </div>
+  
+      <div class="widget-wrap">
+    <h3 class="widget-title">统计</h3>
+    <div class="widget">
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260938947'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260938947%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script>
+    </div>
+  </div>
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2016 WilsonLiu&nbsp;
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;<a href="mailto:wilsonliuxyz@gmail.com">wilsonliuxyz@gmail.com</href>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"wilsonliu95"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/jquery/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
