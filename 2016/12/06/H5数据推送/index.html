@@ -25,7 +25,7 @@ SSE(Server-Sent">
 <meta property="og:image" content="http://blog.wilsonliu.cn//wilsonliu.cn/cdn/img/201612/eeb7c52440b693a3f9f80aaf60b61ec7.JPG">
 <meta property="og:image" content="http://blog.wilsonliu.cn//wilsonliu.cn/cdn/img/201612/630894c737cdb75a199f2bf65d0fa682.JPG">
 <meta property="og:image" content="http://blog.wilsonliu.cn//wilsonliu.cn/cdn/img/201612/3f586a5782af0a19eb114471f018cb61.JPG">
-<meta property="og:updated_time" content="2016-12-07T03:03:53.000Z">
+<meta property="og:updated_time" content="2016-12-07T03:06:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="H5数据推送">
 <meta name="twitter:description" content="前言众所周知，AJAX的出现是前端快速发展的一个标志，同时也是前后端得以分离的重要基础。作为一个C/S网络的web系统，网络通信在发挥着举足轻重的作用。大部分的场景下，我们是主动触发AJAX去调取后端数据，但是总有那么些场景是后端数据更新了再推送给前端。本文则试着和读者一起对这个数据推送的需求进行技术方案的探究。
@@ -117,9 +117,9 @@ SSE(Server-Sent">
 <ul>
 <li>websocket</li>
 <li>SSE(Server-Sent Event)</li>
-<li>轮询(长轮询)</li>
+<li>轮询(长轮询)<a id="more"></a>
+<h2 id="数据推送"><a href="#数据推送" class="headerlink" title="数据推送"></a>数据推送</h2>数据推送是由服务端选择向客户端发送新数据。<br><img src="//wilsonliu.cn/cdn/img/201612/eeb7c52440b693a3f9f80aaf60b61ec7.JPG" alt="数据推送"><br>当数据源有新数据时，服务端能立刻将它发送给一个或多个客户端，而不用等客户端来请求。</li>
 </ul>
-<h2 id="数据推送"><a href="#数据推送" class="headerlink" title="数据推送"></a>数据推送</h2><p>数据推送是由服务端选择向客户端发送新数据。<br><img src="//wilsonliu.cn/cdn/img/201612/eeb7c52440b693a3f9f80aaf60b61ec7.JPG" alt="数据推送"><br>当数据源有新数据时，服务端能立刻将它发送给一个或多个客户端，而不用等客户端来请求。</p>
 <p>数据推送有两种替代方案：无更新方案和数据拉取方案。<br><img src="//wilsonliu.cn/cdn/img/201612/630894c737cdb75a199f2bf65d0fa682.JPG" alt="无更新方案"><br><img src="//wilsonliu.cn/cdn/img/201612/3f586a5782af0a19eb114471f018cb61.JPG" alt="数据拉取方案"></p>
 <p>数据拉取和数据推送的功能目标是一致的:让用户看到最新的数据。但数据推送有一些优势，即更低的延迟。<br>但是在数据拉取的方式中，权衡会让你很纠结，要缩短延迟就要提高轮询的频次，要节省带宽和连接就要降低轮询的频次。</p>
 <h2 id="技术分析"><a href="#技术分析" class="headerlink" title="技术分析"></a>技术分析</h2><h3 id="websocket"><a href="#websocket" class="headerlink" title="websocket"></a>websocket</h3><p>webSocket是html5新引入的技术，允许后台随时向前端发送文本或者二进制消息，WebSocket是一种全新的协议，不属于http无状态协议，协议名为”ws”，<br>这意味着一个websocket连接地址会是这样的写法：<code>ws://wilsonliu.cn:8080/webSocketServer</code>。ws不是http，所以传统的web服务器不一定支持，<br>需要服务器与浏览器同时支持,WebSocket才能正常运行，目前的支持还不普遍，需要特别的web服务器和现代的浏览器。</p>

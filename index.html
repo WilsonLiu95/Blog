@@ -99,138 +99,16 @@
 <ul>
 <li>websocket</li>
 <li>SSE(Server-Sent Event)</li>
-<li>轮询(长轮询)</li>
-</ul>
-<h2 id="数据推送"><a href="#数据推送" class="headerlink" title="数据推送"></a>数据推送</h2><p>数据推送是由服务端选择向客户端发送新数据。<br><img src="//wilsonliu.cn/cdn/img/201612/eeb7c52440b693a3f9f80aaf60b61ec7.JPG" alt="数据推送"><br>当数据源有新数据时，服务端能立刻将它发送给一个或多个客户端，而不用等客户端来请求。</p>
-<p>数据推送有两种替代方案：无更新方案和数据拉取方案。<br><img src="//wilsonliu.cn/cdn/img/201612/630894c737cdb75a199f2bf65d0fa682.JPG" alt="无更新方案"><br><img src="//wilsonliu.cn/cdn/img/201612/3f586a5782af0a19eb114471f018cb61.JPG" alt="数据拉取方案"></p>
-<p>数据拉取和数据推送的功能目标是一致的:让用户看到最新的数据。但数据推送有一些优势，即更低的延迟。<br>但是在数据拉取的方式中，权衡会让你很纠结，要缩短延迟就要提高轮询的频次，要节省带宽和连接就要降低轮询的频次。</p>
-<h2 id="技术分析"><a href="#技术分析" class="headerlink" title="技术分析"></a>技术分析</h2><h3 id="websocket"><a href="#websocket" class="headerlink" title="websocket"></a>websocket</h3><p>webSocket是html5新引入的技术，允许后台随时向前端发送文本或者二进制消息，WebSocket是一种全新的协议，不属于http无状态协议，协议名为”ws”，<br>这意味着一个websocket连接地址会是这样的写法：<code>ws://wilsonliu.cn:8080/webSocketServer</code>。ws不是http，所以传统的web服务器不一定支持，<br>需要服务器与浏览器同时支持,WebSocket才能正常运行，目前的支持还不普遍，需要特别的web服务器和现代的浏览器。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在这里略去服务端实现,着重于比较客户端。 客户端实现可参考[参考链接2]</span></div><div class="line"><span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(<span class="string">"ws://localhost:4000"</span>); <span class="comment">// 这里新建一个websocket连接，ws此时是一个websocket句柄</span></div><div class="line">ws.onopen = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; <span class="comment">// 常见的前端事件回调</span></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"握手成功"</span>);</div><div class="line">&#125;;</div><div class="line">ws.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123; <span class="comment">// 事件有 open,close,error,message</span></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"信息:"</span> + e.data); <span class="comment">// 输出后台返回的信息</span></div><div class="line">&#125;;</div><div class="line">ws.send(<span class="string">"测试"</span>)</div></pre></td></tr></table></figure>
-<h3 id="SSE"><a href="#SSE" class="headerlink" title="SSE"></a>SSE</h3><p>SSE 是 HTML5 的 <code>Server-Sent Events</code>缩写，服务器端发送的事件。网页自动获取服务器端的数据更新。<br>之前网页获取服务器端更新的数据是需要先想服务器发送情况，确定是否有数据变更，然后获取，而SSE是服务器 一旦有数据更新就主动向网页发送数据。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 前端</span></div><div class="line">    <span class="keyword">var</span> es = <span class="keyword">new</span> EventSource(<span class="string">"sse.php"</span>); <span class="comment">// 建立连接,EventSource只能单向通信，没有send函数</span></div><div class="line">    es.addEventListener(<span class="string">"message"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123; <span class="comment">// EventSource有3个事件， open,error,message</span></div><div class="line">      <span class="built_in">console</span>.log(e.data);</div><div class="line">      &#125;,<span class="literal">false</span>);</div><div class="line"></div><div class="line"><span class="comment">// php</span></div><div class="line">&lt;?php</div><div class="line">header(<span class="string">"Content-Type: text/event-stream"</span>); </div><div class="line"><span class="keyword">while</span>(<span class="literal">true</span>)&#123;</div><div class="line">  echo <span class="string">"data:"</span>.date(<span class="string">"Y-m-d H:i:s"</span>).<span class="string">"\n\n"</span>;</div><div class="line">  @ob_flush();@flush(); <span class="comment">// 立即将数据返回给客户端，而不是缓冲起来成批发送</span></div><div class="line">  sleep(<span class="number">1</span>); </div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<h3 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h3><p>轮询：客户端定时向服务器发送Ajax请求，服务器接到请求后马上返回响应信息并关闭连接。<br>优点：后端程序编写比较容易。<br>缺点：请求中有大半是无用，浪费带宽和服务器资源。 </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">poll</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        $.get(<span class="string">"/path/to/server"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data, status</span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(data);</div><div class="line">            <span class="comment">// 发起下一次请求</span></div><div class="line">            poll();</div><div class="line">        &#125;);</div><div class="line">    &#125;, <span class="number">10000</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>长轮询：客户端向服务器发送Ajax请求，服务器接到请求后hold住连接，直到有新消息才返回响应信息并关闭连接，客户端处理完响应信息后再向服务器发送新的请求。<br>优点：在无消息的情况下不会频繁的请求，耗费资源小。<br>缺点：服务器hold连接会消耗资源，返回数据顺序无保证，难于管理维护。 </p>
-<h2 id="SSE与websocket的对比"><a href="#SSE与websocket的对比" class="headerlink" title="SSE与websocket的对比"></a>SSE与websocket的对比</h2><p>websocket是一种更为复杂的服务端实现技术，但它是真正的双向传输技术，既能从服务端向客户端推送数据，也能从客户端向服务端推送数据。<br>websocket和SSE的浏览器支持率差不多。</p>
-<p>SSE优势。</p>
-<ul>
-<li>既存基础设施优势：不需要添加任何新组件，也不需要新建虚拟机，弄一个新的IP或新的端口号。</li>
-<li>服务端更加简洁</li>
-<li>文本协议，更方便调试</li>
-</ul>
-<p>websocket优势</p>
-<ul>
-<li>双向数据流(使用SSE时，一般通过独立的AJAX请求从客户端向服务端传送数据)</li>
-</ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a href="https://www.zhihu.com/question/20215561" target="_blank" rel="external">知乎:WebSocket 是什么原理？为什么可以实现持久连接?</a></li>
-<li><a href="http://www.barretlee.com/blog/2013/12/25/cb-websocket-with-php/" target="_blank" rel="external">细说websocket - php篇</a></li>
-<li><a href="http://blog.zhangruipeng.me/2015/10/22/Web-Connectivity/" target="_blank" rel="external">传统轮询、长轮询、服务器发送事件与WebSocket</a></li>
-</ol>
-
+<li>轮询(长轮询)
+        
+          <p class="article-more-link">
+            <a href="/2016/12/06/H5数据推送/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
 
-
-  <!-- /赞赏代码开始 -->
-
-  <!-- css -->
-  <style type="text/css">
-      .center {
-          text-align: center;
-      }
-      .hidden {
-          display: none;
-      }
-    .donate_bar a.btn_donate{
-      display: inline-block;
-      width: 82px;
-      height: 82px;
-      background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
-      _background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
-
-      <!-- http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif
-           因为本 hexo 生成的博客所用的 theme 的 a:hover 带动画效果，
-         为了在让打赏按钮显示效果正常 而 添加了以下几行 css，
-         嵌入其它博客时不一定要它们。 -->
-      -webkit-transition: background 0s;
-      -moz-transition: background 0s;
-      -o-transition: background 0s;
-      -ms-transition: background 0s;
-      transition: background 0s;
-      <!-- /让打赏按钮的效果显示正常 而 添加的几行 css 到此结束 -->
-    }
-
-    .donate_bar a.btn_donate:hover{ background-position: 0px -82px;}
-    .donate_bar .donate_txt {
-      display: block;
-      color: #9d9d9d;
-      font: 14px/2 "Microsoft Yahei";
-    }
-    .bold{ font-weight: bold; }
-  </style>
-  <!-- /css -->
-
-    <!-- Donate Module -->
-    <div id="donate_module">
-
-  <!-- btn_donate & tips -->
-  <div id="donate_board" class="donate_bar center">
-    <a id="btn_donate" class="btn_donate" target="_self" href="javascript:;" title="Donate 打赏"></a>
-    <span class="donate_txt">
-      欣赏此文？求鼓励，求支持！
-    </span>
-      
-    
-  </div>
-  <!-- /btn_donate & tips -->
-
-  <!-- donate guide -->
-    
-  <div id="donate_guide" class="donate_bar center hidden">
-
-    <a href="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="用微信扫一扫哦~" class="fancybox" rel="article0">
-      <img src="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="微信打赏 Colin" height="190px" width="190px"/>
-    </a>
-        
-        &nbsp;&nbsp;
-
-    <a href="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="用支付宝扫一扫即可~" class="fancybox" rel="article0">
-      <img src="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="支付宝打赏 Colin" height="190px" width="190px"/>
-    </a>
-
-    <span class="donate_txt">
-      欣赏此文？求鼓励，求支持！
-    </span>
-
-  </div>
-  <!-- /donate guide -->
-
-  <!-- donate script -->
-  <script type="text/javascript">
-    document.getElementById('btn_donate').onclick = function() {
-      $('#donate_board').addClass('hidden');
-      $('#donate_guide').removeClass('hidden');
-    }
-
-    function donate_on_web(){
-      $('#donate').submit();
-        }
-
-    var original_window_onload = window.onload;
-        window.onload = function () {
-            if (original_window_onload) {
-                original_window_onload();
-            }
-            document.getElementById('donate_board_wdg').className = 'hidden';
-    }
-  </script>
-  <!-- /donate script -->
-</div>
-<!-- /Donate Module -->
-   
-  <!-- /赞赏代码结束 -->
 
 
 
