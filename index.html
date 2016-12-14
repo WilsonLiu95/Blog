@@ -99,135 +99,16 @@
 <ul>
 <li>优化数据库</li>
 <li>负载均衡</li>
-<li>缓存技术</li>
-</ul>
-<h2 id="优化数据库"><a href="#优化数据库" class="headerlink" title="优化数据库"></a>优化数据库</h2><p>对于使用数据库的Web站点来说，数据库性能关系整个web应用的性能，如果数据库性能不佳，其他的优化工作也是徒劳无功。所以优化数据库性能，<br>对提高整个web应用的效率有着举足轻重的作用。</p>
-<p>1、 表的设计要规范，即要符合数据库设计范式。<br>2、 适当建立索引，在频繁作为检索条件，更新较少的字段上建立索引，以提高查询速度。<br>3、 分表查询，有水平分割、垂直分割。<br>4、 读写分离，读(read)、写(create、update、delete)。<br>5、 建立存储过程。</p>
-<p>这里特别想提到的是拆分表格这一点。最简单的诸如，根据用户ID的最后1位的数字将其拆分成10个表，即 0，1，2，3，4，5，6，7，9。<br>这种平行的拆分方式，一方面，可以解决单个数据库并发连接数的限制，另外一方面可以控制单表的大小。很有效的一种优化方式，特别在于解决高并发的需求。</p>
-<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>单台Web服务器处理能力有限，单台服务器承受的压力达到极限时，需要有更多的服务器分担工作，我们需要想办法将流量合理分配到更多的服务器上。<br>任何的负载均衡技术都要想办法建立某种一对多的映射机制: 一个请求的入口映射到多个处理请求的节点，从而实现分而治之（Divide and Conquer）。<br>这种映射机制使得多个物理存在对外体现为一个虚拟的整体，对服务的请求者屏蔽了内部的结构。<br>采用不同的机制建立映射关系，可以形成不同的负载均衡技术，常见的包括：</p>
-<ul>
-<li>CDN</li>
-<li>HTTP重定向</li>
-<li>基于DNS的轮询解析 </li>
-<li>反向代理服务器</li>
-</ul>
-<p>详细可以参考 <a href="https://www.kancloud.cn/kancloud/web-million-build/64443" target="_blank" rel="external">亿级Web系统搭建——单机到分布式集群</a></p>
-<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p>随着网络的发展，数据越来越多，从而导致运算的压力越来越大，为了解决这一问题，就需要合理<strong>分级</strong>计算资源，充分利用已有资源。缓存的工作实际上计算资源的合理分配。</p>
-<p>缓存 (Cache) 原意是指可以进行高速数据交换的存储器。当CPU处理数据时，先到 Cache 中寻找，如果数据因之前的操作已经读取而被暂存其中，就不需要再从随机存取存储器中读取数据了。<br>现在缓存的概念已被扩充,凡是位于速度相差较大的两种介质之间，用于协调两者数据传输速度差异的结构，均可以称之为 Cache 。<br>在 web 世界，理论上每一层都可以被缓存。以PHP应用为例：</p>
-<ul>
-<li>底层有CPU缓存，磁盘文件系统缓存</li>
-<li>数据库层有 Table Cache,Query Cache</li>
-<li>Apache和Ngix的缓存</li>
-<li>应用程序代码级别的Smarty实现的文件缓存</li>
-<li>基于HTTP协议和浏览器自身实现的浏览器缓存</li>
-<li>基于NoSQL系统的缓存(redis, memcached)</li>
-</ul>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>上述三种技术手段，是构建大型网络应用的必备技术，展开来每点的水都很深。<br>而作为一个前端儿，许多技术可能无法在工程项目中亲自去实践，也只能从书，讲座，博文中学习了。</p>
-<p>最后推荐一本PHP的书籍《PHP核心技术与最佳实践》，确实如同作者在其书中前言所述，没有讲述HTML,CSS,JS基础，也没有讲PHP语法基础，而是专注于web开发技术的最前沿，深入浅出，探讨高并发大流量的架构。 非常棒的一本进阶书籍。</p>
-
+<li>缓存技术
+        
+          <p class="article-more-link">
+            <a href="/2016/12/13/前端也该了解的一些后端知识/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
 
-
-  <!-- /赞赏代码开始 -->
-
-  <!-- css -->
-  <style type="text/css">
-      .center {
-          text-align: center;
-      }
-      .hidden {
-          display: none;
-      }
-    .donate_bar a.btn_donate{
-      display: inline-block;
-      width: 82px;
-      height: 82px;
-      background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
-      _background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
-
-      <!-- http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif
-           因为本 hexo 生成的博客所用的 theme 的 a:hover 带动画效果，
-         为了在让打赏按钮显示效果正常 而 添加了以下几行 css，
-         嵌入其它博客时不一定要它们。 -->
-      -webkit-transition: background 0s;
-      -moz-transition: background 0s;
-      -o-transition: background 0s;
-      -ms-transition: background 0s;
-      transition: background 0s;
-      <!-- /让打赏按钮的效果显示正常 而 添加的几行 css 到此结束 -->
-    }
-
-    .donate_bar a.btn_donate:hover{ background-position: 0px -82px;}
-    .donate_bar .donate_txt {
-      display: block;
-      color: #9d9d9d;
-      font: 14px/2 "Microsoft Yahei";
-    }
-    .bold{ font-weight: bold; }
-  </style>
-  <!-- /css -->
-
-    <!-- Donate Module -->
-    <div id="donate_module">
-
-  <!-- btn_donate & tips -->
-  <div id="donate_board" class="donate_bar center">
-    <a id="btn_donate" class="btn_donate" target="_self" href="javascript:;" title="Donate 打赏"></a>
-    <span class="donate_txt">
-      欣赏此文？求鼓励，求支持！
-    </span>
-      
-    
-  </div>
-  <!-- /btn_donate & tips -->
-
-  <!-- donate guide -->
-    
-  <div id="donate_guide" class="donate_bar center hidden">
-
-    <a href="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="用微信扫一扫哦~" class="fancybox" rel="article0">
-      <img src="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="微信打赏 Colin" height="190px" width="190px"/>
-    </a>
-        
-        &nbsp;&nbsp;
-
-    <a href="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="用支付宝扫一扫即可~" class="fancybox" rel="article0">
-      <img src="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="支付宝打赏 Colin" height="190px" width="190px"/>
-    </a>
-
-    <span class="donate_txt">
-      欣赏此文？求鼓励，求支持！
-    </span>
-
-  </div>
-  <!-- /donate guide -->
-
-  <!-- donate script -->
-  <script type="text/javascript">
-    document.getElementById('btn_donate').onclick = function() {
-      $('#donate_board').addClass('hidden');
-      $('#donate_guide').removeClass('hidden');
-    }
-
-    function donate_on_web(){
-      $('#donate').submit();
-        }
-
-    var original_window_onload = window.onload;
-        window.onload = function () {
-            if (original_window_onload) {
-                original_window_onload();
-            }
-            document.getElementById('donate_board_wdg').className = 'hidden';
-    }
-  </script>
-  <!-- /donate script -->
-</div>
-<!-- /Donate Module -->
-   
-  <!-- /赞赏代码结束 -->
 
 
 
