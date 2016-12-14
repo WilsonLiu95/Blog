@@ -6,18 +6,39 @@
 
   <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
   
-  <title>HTTP内容分发 | WilsonLiu&#39;s blog</title>
+  <title>前端也该了解的一些后端知识 | WilsonLiu&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Web主机托管对内容资源的存储协调以及管理的职责统称为Web主机托管。">
+  <meta name="description" content="前言作为一个有追求的前端，在学有余力的同时,不应该把自己仅仅局限于前端的世界中的。而后端的知识是与前端工作最密切相关的一部分内容，多了解些后端的知识也是大有裨益的。
+本文简单叙述了三种构建大型架构的必备知识。也是我做前端这么久以来，一直想知道的如何突破现有的性能瓶颈做到高并发，高性能，高可靠。文中如有错误，欢迎指正。
+
+优化数据库
+负载均衡
+缓存技术
+
+优化数据库对于使用数据库的Web站点来说，数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTP内容分发">
-<meta property="og:url" content="http://blog.wilsonliu.cn/2016/05/01/HTTP内容分发/index.html">
+<meta property="og:title" content="前端也该了解的一些后端知识">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2016/12/13/前端也该了解的一些后端知识/index.html">
 <meta property="og:site_name" content="WilsonLiu's blog">
-<meta property="og:description" content="Web主机托管对内容资源的存储协调以及管理的职责统称为Web主机托管。">
-<meta property="og:updated_time" content="2016-12-06T05:21:52.000Z">
+<meta property="og:description" content="前言作为一个有追求的前端，在学有余力的同时,不应该把自己仅仅局限于前端的世界中的。而后端的知识是与前端工作最密切相关的一部分内容，多了解些后端的知识也是大有裨益的。
+本文简单叙述了三种构建大型架构的必备知识。也是我做前端这么久以来，一直想知道的如何突破现有的性能瓶颈做到高并发，高性能，高可靠。文中如有错误，欢迎指正。
+
+优化数据库
+负载均衡
+缓存技术
+
+优化数据库对于使用数据库的Web站点来说，数">
+<meta property="og:updated_time" content="2016-12-14T03:09:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HTTP内容分发">
-<meta name="twitter:description" content="Web主机托管对内容资源的存储协调以及管理的职责统称为Web主机托管。">
+<meta name="twitter:title" content="前端也该了解的一些后端知识">
+<meta name="twitter:description" content="前言作为一个有追求的前端，在学有余力的同时,不应该把自己仅仅局限于前端的世界中的。而后端的知识是与前端工作最密切相关的一部分内容，多了解些后端的知识也是大有裨益的。
+本文简单叙述了三种构建大型架构的必备知识。也是我做前端这么久以来，一直想知道的如何突破现有的性能瓶颈做到高并发，高性能，高可靠。文中如有错误，欢迎指正。
+
+优化数据库
+负载均衡
+缓存技术
+
+优化数据库对于使用数据库的Web站点来说，数">
   
   
     <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
@@ -70,14 +91,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="postcd ..-HTTP内容分发" class="article article-type-postcd .." itemscope itemprop="blogPost">
+        <section id="main"><article id="postcd ..-前端也该了解的一些后端知识" class="article article-type-postcd .." itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/05/01/HTTP内容分发/" class="article-date">
-  <time datetime="2016-05-01T05:18:52.000Z" itemprop="datePublished">2016-05-01</time>
+    <a href="/2016/12/13/前端也该了解的一些后端知识/" class="article-date">
+  <time datetime="2016-12-13T09:32:10.000Z" itemprop="datePublished">2016-12-13</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/网络/">网络</a>
+    <a class="article-category-link" href="/categories/性能/">性能</a>
   </div>
 
   </div>
@@ -88,7 +109,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      HTTP内容分发
+      前端也该了解的一些后端知识
     </h1>
   
 
@@ -96,72 +117,36 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Web主机托管"><a href="#Web主机托管" class="headerlink" title="Web主机托管"></a>Web主机托管</h2><p>对内容资源的存储协调以及管理的职责统称为Web主机托管。<br><a id="more"></a></p>
-<h3 id="虚拟服务器请求却反主机信息"><a href="#虚拟服务器请求却反主机信息" class="headerlink" title="虚拟服务器请求却反主机信息"></a>虚拟服务器请求却反主机信息</h3><p>HTTP/1.0中的一个设计缺陷会使虚拟主机托管者疯狂。HTTP/1.0中没有为共享的Web服务器提供任何方法来识别要访问的是所托管的哪个虚拟网站。<br>HTTP/1.0请求在报文中只发送URL的路径部分，如果要访问<code>http://www.baidu.com/index.html</code>，浏览器会连接到服务器<code>http://www.baidu.com</code>,但HTTP/1.0请求中却只提到<code>GET /index.html</code>，没有提到主机名。如果服务器虚拟托管了许多个站点，就没有足够的信息能指出要访问的是哪个虚拟主机网站。 并且HTTP反向代理和拦截代理也都需要明确的站点信息。</p>
-<p>因此HTTP/1.1的确要求服务器能够处理HTTP报文请求行上的完整URL，但将现存的应用程序都升级都这个规范还需要时间，在此期间，涌现出了以下4种技术。</p>
-<ol>
-<li>通过URL路径进行虚拟主机托管 —— 在URL中增添专门的路径部分，以便服务器判断是哪个网站</li>
-<li>通过端口号进行主机托管 —— 为每个站点分配不同的端口号，这样请求就由web服务器的单独实例来处理</li>
-<li>通过IP地址进行主机托管 —— 为不同的虚拟站点分配专门的IP地址</li>
-<li>通过Host首部进行主机托管</li>
-</ol>
-<h3 id="镜像的服务器集群"><a href="#镜像的服务器集群" class="headerlink" title="镜像的服务器集群"></a>镜像的服务器集群</h3><p>服务器集群是一排配置相同的Web服务器，互相可以替换。每个服务器上的内容可以通过镜像复制，这样当某个服务器出问题的时候，其他的可以顶上。<br>镜像的服务器常常组成层次化的关系。某个服务器可能充当“内容权威”——它含有原始内容(可能就是内容作者上传的那个服务器)。这个服务器称为主原始服务器(<code>master origin server</code>)。从主原始服务器接收内容的镜像服务器称为复制原始服务器(<code>replica origin server</code>)。一种简单的部署服务器集群的方法是用网络交换机把请求分发给服务器。托管在服务器上的每个网站的IP地址就设置为交换机的IP地址。</p>
-<p>镜像Web服务器可以在不同的地点包含同样内容的副本。可以有以下两种方法把客户端的请求导向特定的服务器。</p>
-<ol>
-<li>HTTP重定向 —— 该内容的URL会解析到主服务器的IP地址，然后它会发生重定向到复制服务器</li>
-<li>DNS重定向 —— 该内容的URL会解析到4个IP地址，DNS服务器可以选择发送给客户端的IP地址</li>
-</ol>
-<h3 id="内容分发网络-CDN"><a href="#内容分发网络-CDN" class="headerlink" title="内容分发网络 CDN"></a>内容分发网络 CDN</h3><p>简单地说，内容分发网络就是对特定内容进行分发的专门网络。这个网络中的节点可以是Web服务器，反向代理或缓存。</p>
-<h4 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h4><p>反向代理缓存可以像镜像服务器一样接收服务器请求，它们代表原始服务器中的一个特定集合来接收服务器请求。(根据内容所在的IP地址的广告方式，这是有可能的，原始服务器和反向代理缓存之间通常有协作关系，到特定的原始服务器的请求就由反向代理缓存来接收。)</p>
-<h4 id="CDN中的代理缓存"><a href="#CDN中的代理缓存" class="headerlink" title="CDN中的代理缓存"></a>CDN中的代理缓存</h4><p>与反向代理不同，传统的代理缓存能够收到发往任何Web服务器的请求(在代理缓存与原始服务器之间不需要有任何工作关系或IP地址约定)。</p>
-<h2 id="重定向和负载均衡"><a href="#重定向和负载均衡" class="headerlink" title="重定向和负载均衡"></a>重定向和负载均衡</h2><p>由于HTTP应用程序总是要做下列3件事情，所以在现代网络中重定向是普遍存在的:</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为一个有追求的前端，在学有余力的同时,不应该把自己仅仅局限于前端的世界中的。<br>而后端的知识是与前端工作最密切相关的一部分内容，多了解些后端的知识也是大有裨益的。</p>
+<p>本文简单叙述了三种构建大型架构的必备知识。也是我做前端这么久以来，一直想知道的如何突破现有的性能瓶颈做到<br>高并发，高性能，高可靠。文中如有错误，欢迎指正。</p>
 <ul>
-<li>可靠地执行HTTP事务</li>
-<li>最小化时延</li>
-<li>节约网络带宽<br>出于这些原因，web内容通常分布在很多地方。这么做是出于可靠性的考虑。这样如果一个位置出现了问题，还有其他的可用；如果客户端能够访问较劲的资源，就可用更快的收到所请求的内容，以降低响应时间；将目标服务器分散，还可以减少网络拥塞。可用将重定向当做一组有助于找到”最佳”分布式内容的技术。<br>而重定向和负载均衡总是共存的。</li>
+<li>优化数据库</li>
+<li>负载均衡</li>
+<li>缓存技术</li>
 </ul>
-<h3 id="重定向方法"><a href="#重定向方法" class="headerlink" title="重定向方法"></a>重定向方法</h3><p><strong>通用的重定向方法</strong></p>
+<h2 id="优化数据库"><a href="#优化数据库" class="headerlink" title="优化数据库"></a>优化数据库</h2><p>对于使用数据库的Web站点来说，数据库性能关系整个web应用的性能，如果数据库性能不佳，其他的优化工作也是徒劳无功。所以优化数据库性能，<br>对提高整个web应用的效率有着举足轻重的作用。</p>
+<p>1、 表的设计要规范，即要符合数据库设计范式。<br>2、 适当建立索引，在频繁作为检索条件，更新较少的字段上建立索引，以提高查询速度。<br>3、 分表查询，有水平分割、垂直分割。<br>4、 读写分离，读(read)、写(create、update、delete)。<br>5、 建立存储过程。</p>
+<p>这里特别想提到的是拆分表格这一点。最简单的诸如，根据用户ID的最后1位的数字将其拆分成10个表，即 0，1，2，3，4，5，6，7，9。<br>这种平行的拆分方式，一方面，可以解决单个数据库并发连接数的限制，另外一方面可以控制单表的大小。很有效的一种优化方式，特别在于解决高并发的需求。</p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>单台Web服务器处理能力有限，单台服务器承受的压力达到极限时，需要有更多的服务器分担工作，我们需要想办法将流量合理分配到更多的服务器上。<br>任何的负载均衡技术都要想办法建立某种一对多的映射机制: 一个请求的入口映射到多个处理请求的节点，从而实现分而治之（Divide and Conquer）。<br>这种映射机制使得多个物理存在对外体现为一个虚拟的整体，对服务的请求者屏蔽了内部的结构。<br>采用不同的机制建立映射关系，可以形成不同的负载均衡技术，常见的包括：</p>
 <ul>
+<li>CDN</li>
 <li>HTTP重定向</li>
-<li>DNS重定向</li>
-<li>任播寻址</li>
-<li>IP MAC转发</li>
-<li>IP地址转发</li>
+<li>基于DNS的轮询解析 </li>
+<li>反向代理服务器</li>
 </ul>
-<p><strong>代理与缓存重定向技术</strong></p>
+<p>详细可以参考 <a href="https://www.kancloud.cn/kancloud/web-million-build/64443" target="_blank" rel="external">亿级Web系统搭建——单机到分布式集群</a></p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p>随着网络的发展，数据越来越多，从而导致运算的压力越来越大，为了解决这一问题，就需要合理<strong>分级</strong>计算资源，充分利用已有资源。缓存的工作实际上计算资源的合理分配。</p>
+<p>缓存 (Cache) 原意是指可以进行高速数据交换的存储器。当CPU处理数据时，先到 Cache 中寻找，如果数据因之前的操作已经读取而被暂存其中，就不需要再从随机存取存储器中读取数据了。<br>现在缓存的概念已被扩充,凡是位于速度相差较大的两种介质之间，用于协调两者数据传输速度差异的结构，均可以称之为 Cache 。<br>在 web 世界，理论上每一层都可以被缓存。以PHP应用为例：</p>
 <ul>
-<li>显示浏览器配置</li>
-<li>代理自动配置(PAC)</li>
-<li>Web Proxy代理自动发现协议(WPAD)</li>
-<li>Web缓存协调协议(WCCP)</li>
-<li>因特网缓存协议(ICP)</li>
-<li>缓存分组路由协议(CARP)</li>
-<li>超文本缓存协议(HTCP)</li>
+<li>底层有CPU缓存，磁盘文件系统缓存</li>
+<li>数据库层有 Table Cache,Query Cache</li>
+<li>Apache和Ngix的缓存</li>
+<li>应用程序代码级别的Smarty实现的文件缓存</li>
+<li>基于HTTP协议和浏览器自身实现的浏览器缓存</li>
+<li>基于NoSQL系统的缓存(redis, memcached)</li>
 </ul>
-<h3 id="通用的重定向方法"><a href="#通用的重定向方法" class="headerlink" title="通用的重定向方法"></a>通用的重定向方法</h3><h4 id="HTTP重定向"><a href="#HTTP重定向" class="headerlink" title="HTTP重定向"></a>HTTP重定向</h4><p>与其他形式的重定向相比，HTTP重定向的优点之一就是重定向服务器知道客户端IP地址，理论上来讲，它可以做出更合理的选择。</p>
-<p>HTTP重定向可以在服务器间引导请求，但有以下几个缺点。</p>
-<ul>
-<li>需要原始服务器进行大量处理来判断要重定向到哪台服务器上去。有时，发布重定向所需的处理量几乎与提高页面本身所需的处理量一样。</li>
-<li>增加了用户时延，因为访问页面时要进行两次往返。</li>
-<li>如果重定向服务器出故障，站点就会瘫痪。</li>
-</ul>
-<h4 id="DNS重定向"><a href="#DNS重定向" class="headerlink" title="DNS重定向"></a>DNS重定向</h4><p>DNS允许将几个IP地址关联到一个域中，可以配置DNS解析程序，或对其进行编程，以返回可变的IP地址。解析程序返回IP地址时，所基于的原则可以很简单(轮转)，也可以很复杂(比如查看几台服务器上的负载均衡，并返回负载最轻的服务器的IP地址)。</p>
-<p><strong>DNS缓存带来的影响</strong></p>
-<p>DNS对服务器的每次查询都会得到不同的服务器地址序列，所以DNS地址轮转会将负载分摊。但是这种负载均衡也并不完美，因为DNS查找结果可能会被客户端记住并被反复重用，以减少DNS查找的开销，而且有些服务器也愿意保持与一台客户端的联系。</p>
-<p><strong>其他基于DNS的重定向算法</strong></p>
-<ul>
-<li>负载均衡算法</li>
-<li>邻接路由算法</li>
-<li>故障屏蔽算法</li>
-</ul>
-<h4 id="任播寻址"><a href="#任播寻址" class="headerlink" title="任播寻址"></a>任播寻址</h4><p>在任播寻址中，几个地理上分散的Web服务器拥有完全相同的IP地址，而且会通过骨干路由器的”最短路径”路由功能将客户端的请求发送给离它最近的服务器。要使这种方法工作，每个路由器都要想邻近的骨干路由器广告，表明自己是一台路由器。</p>
-<h4 id="IP-MAC转发"><a href="#IP-MAC转发" class="headerlink" title="IP MAC转发"></a>IP MAC转发</h4><p>支持MAC转发的第四次交换机通常会将请求转发给几个代理缓存，并在它们之间平衡负载，因为MAC地址转发是点对点的，所以服务器或代理只能位于离交换机一跳远的地方。</p>
-<h4 id="IP地址转发"><a href="#IP地址转发" class="headerlink" title="IP地址转发"></a>IP地址转发</h4><p>在IP地址转发中，交换机或其他第四层设备会检测输入分组中的TCP/IP地址，并通过修改目的IP地址(不是目的MAC地址)，对分组进行相应的转发。</p>
-<h3 id="代理的重定向方法"><a href="#代理的重定向方法" class="headerlink" title="代理的重定向方法"></a>代理的重定向方法</h3><ul>
-<li>显式配置浏览器设置</li>
-<li>代理自动配置 PAC</li>
-<li>Web代理自动发现协议 WPAD</li>
-</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>上述三种技术手段，是构建大型网络应用的必备技术，展开来每点的水都很深。<br>而作为一个前端儿，许多技术可能无法在工程项目中亲自去实践，也只能从书，讲座，博文中学习了。</p>
+<p>最后推荐一本PHP的书籍《PHP核心技术与最佳实践》，确实如同作者在其书中前言所述，没有讲述HTML,CSS,JS基础，也没有讲PHP语法基础，而是专注于web开发技术的最前沿，深入浅出，探讨高并发大流量的架构。 非常棒的一本进阶书籍。</p>
 
       
     </div>
@@ -269,13 +254,13 @@
 
 
 
-      <a data-url="http://blog.wilsonliu.cn/2016/05/01/HTTP内容分发/" data-id="ciwod0d9h0007uiu0v6qataqk" class="article-share-link">分享</a>
+      <a data-url="http://blog.wilsonliu.cn/2016/12/13/前端也该了解的一些后端知识/" data-id="ciwod0dah0017uiu04m3fnel1" class="article-share-link">分享</a>
       
-        <a href="http://blog.wilsonliu.cn/2016/05/01/HTTP内容分发/#ds-thread" class="article-comment-link">留言</a>
+        <a href="http://blog.wilsonliu.cn/2016/12/13/前端也该了解的一些后端知识/#ds-thread" class="article-comment-link">留言</a>
       
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP权威指南/">HTTP权威指南</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PHP/">PHP</a></li></ul>
 
     </footer>
   </div>
@@ -283,19 +268,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/05/20/ShellScript编程小结/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          ShellScript编程小结
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/04/29/HTTP实体和编码/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/12/06/H5数据推送/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">HTTP实体和编码</div>
+      <div class="article-nav-title">H5数据推送</div>
     </a>
   
 </nav>
@@ -306,7 +282,7 @@
 
       <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/05/01/HTTP内容分发/" data-title="HTTP内容分发" data-url="http://blog.wilsonliu.cn/2016/05/01/HTTP内容分发/"></div>
+	<div class="ds-thread" data-thread-key="2016/12/13/前端也该了解的一些后端知识/" data-title="前端也该了解的一些后端知识" data-url="http://blog.wilsonliu.cn/2016/12/13/前端也该了解的一些后端知识/"></div>
 	<!-- 多说评论框 end -->
 </div>
 
