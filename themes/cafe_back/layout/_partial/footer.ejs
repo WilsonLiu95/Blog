@@ -1,0 +1,13 @@
+<footer id="footer">
+  <% if (theme.sidebar === 'bottom'){ %>
+    <%- partial('_partial/sidebar') %>
+  <% } %>
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - <%= date(new Date(), 'YYYY') %> <%= config.author || config.title %>&nbsp;
+    </div>
+     <div id="footer-right">
+      <%= __('contact') %>&nbsp;|&nbsp;<a href="mailto:<%= config.email || config.url %>"><%= config.email || config.url %></href>
+    </div>
+  </div>
+</footer>
