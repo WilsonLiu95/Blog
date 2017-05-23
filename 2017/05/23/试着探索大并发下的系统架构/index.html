@@ -18,7 +18,7 @@
 当然，本文仅仅是试着探索而已，并没有相关实践的经历，也只能从理论的角度去推演，从现有可参考的资料中去堆砌一个在我看来合理的架构方案。限于作者水平有限，因此难免行文难免有误，亦或是">
 <meta property="og:image" content="http://blog.wilsonliu.cn/assets/arch/arch.png">
 <meta property="og:image" content="http://blog.wilsonliu.cn/assets/arch/dig_qq.jpeg">
-<meta property="og:updated_time" content="2017-05-23T09:45:56.000Z">
+<meta property="og:updated_time" content="2017-05-23T10:38:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="试着探索大并发下的系统架构">
 <meta name="twitter:description" content="前言以前端入行编码，但是对后端架构也非常感兴趣。一直以来都觉得那些做到在洪水流量面前保持系统提供高可靠，高性能的服务的小哥哥们都很厉害。总想着去学习一番，因此大半年来不断学习后端相关的知识，试图去理解大并发架构的面貌。
@@ -114,7 +114,7 @@ var _hmt = _hmt || [];
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前端入行编码，但是对后端架构也非常感兴趣。一直以来都觉得那些做到在洪水流量面前保持系统提供高可靠，高性能的服务的小哥哥们都很厉害。总想着去学习一番，因此大半年来不断学习后端相关的知识，试图去理解大并发架构的面貌。</p>
 <p>当然，本文仅仅是试着探索而已，并没有相关实践的经历，也只能从理论的角度去推演，从现有可参考的资料中去堆砌一个在我看来合理的架构方案。限于作者水平有限，因此难免行文难免有误，亦或是对整个系统的理解上理想化了，欢迎各位指出不足。同时，本文不会详实的阐述提到的每个细节，因为自己对细节的把控也不到位，另外也是希望大家能够在本文的基础上自己去了解这些技术。</p>
-<p><img src="/assets/arch/arch.png" alt="基本架构图"></p>
+<p><img src="/assets/arch/arch.png" alt="基本架构图"><br><a id="more"></a></p>
 <h2 id="核心技术点"><a href="#核心技术点" class="headerlink" title="核心技术点"></a>核心技术点</h2><p>在作者看来，本文偏向于考虑如何做到大并发和高可用，因此一些性能优化的点则可能不作为重点言及，一是因为性能优化点过于繁多，会造成篇幅过长，另外也是因为具体的细节作者也未经实践不敢在这里细究。因此，列出以下这些在作者看来最为重要的核心技术点。</p>
 <ol>
 <li>智能DNS解析调度</li>

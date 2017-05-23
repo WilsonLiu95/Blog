@@ -106,142 +106,16 @@ var _hmt = _hmt || [];
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前端入行编码，但是对后端架构也非常感兴趣。一直以来都觉得那些做到在洪水流量面前保持系统提供高可靠，高性能的服务的小哥哥们都很厉害。总想着去学习一番，因此大半年来不断学习后端相关的知识，试图去理解大并发架构的面貌。</p>
 <p>当然，本文仅仅是试着探索而已，并没有相关实践的经历，也只能从理论的角度去推演，从现有可参考的资料中去堆砌一个在我看来合理的架构方案。限于作者水平有限，因此难免行文难免有误，亦或是对整个系统的理解上理想化了，欢迎各位指出不足。同时，本文不会详实的阐述提到的每个细节，因为自己对细节的把控也不到位，另外也是希望大家能够在本文的基础上自己去了解这些技术。</p>
-<p><img src="/assets/arch/arch.png" alt="基本架构图"></p>
-<h2 id="核心技术点"><a href="#核心技术点" class="headerlink" title="核心技术点"></a>核心技术点</h2><p>在作者看来，本文偏向于考虑如何做到大并发和高可用，因此一些性能优化的点则可能不作为重点言及，一是因为性能优化点过于繁多，会造成篇幅过长，另外也是因为具体的细节作者也未经实践不敢在这里细究。因此，列出以下这些在作者看来最为重要的核心技术点。</p>
-<ol>
-<li>智能DNS解析调度</li>
-<li>负载均衡</li>
-<li>消息服务</li>
-<li>CDN配合对象存储服务</li>
-<li>Redis缓存</li>
-<li>分库分表</li>
-</ol>
-<p>抗住大并发的最基本点在于可以通过横向叠加机器解决问题，这也是最根本的架构设计要求。</p>
-<h2 id="技术详解"><a href="#技术详解" class="headerlink" title="技术详解"></a>技术详解</h2><h3 id="智能DNS解析调度"><a href="#智能DNS解析调度" class="headerlink" title="智能DNS解析调度"></a>智能DNS解析调度</h3><p>在所有用户的都是通过同一域名<code>www.qq.com</code>获取服务的情况下，想要将流量分散到多个负载均衡节点，必须要依赖DNS的解析。</p>
-<p>DNS解析最简单的可以通过添加多条A记录将域名映射到多个IP地址来达到分流的目的。看到许多资料，往往只提到这个层面，然后抛出了问题：调度算法简单，往往是动态轮询，而部署的机器之间可能会存在性能差异或者当下健康状况不同,简单的轮询并不能满足实际需求。<br>因此，经过一番搜索，发现了<code>dnspod</code>这样的第三方DNS解析服务提供设置权重，这样一来就可以针对机器的状况不同进行不同的权重配比。通过配比权重，基本上，就可以完成DNS解析的负载均衡了。</p>
-<p>但是作者一直好奇，这些第三方的DNS解析厂商如何工作，因此在查阅资料之后，将原理总结如下：<br>在DNS解析中，我们购买域名后，可以设置对应域名的权威DNS解析服务器。以访问<code>www.qq.com.</code>为例，DNS解析首先会递归查找对应域名的IP地址。一直查找到根域<code>.</code>,根域让我们去问<code>com.</code>的权威服务器, 之后去问<code>qq.com.</code>的权威服务器，再问<code>www.qq.com.</code>的权威服务器，这时候我们终于找到了<code>www.qq.com.</code>的权威服务器<code>ns-edu1.qq.com.</code>与<code>ns-edu2.qq.com.</code>，权威服务器经过一系列算法最后给了我们请求域名的IP地址。</p>
-<p><img src="/assets/arch/dig_qq.jpeg" alt="DNS解析图"></p>
-<p>购买域名后，域名往往被默认的设置为平台默认的DNS解析服务器上，我们也可以对其进行更改，比如设置到<code>dnspod</code>，并自己在<code>dnspod</code>进行配置。对于一些大厂，也可以通过自行架设DNS解析服务器并编写自定义的规则进行处理来达到高度定制化的管控。常见的管控如下:</p>
-<ul>
-<li>通过识别用户是电信网还是联通网，将对应的网络内部署的服务器地址返回，以避免用户请求的跨网，跨网会带来一定的网络传输性能的下降</li>
-<li>识别用户归属地，分配到最近的服务器以减少网络传输的距离</li>
-</ul>
-<p>最后需要注意的是DNS解析的更改的实时性存在很大的限制，因为各地ISP服务商刷新域名DNS的时间不一致，所以导致解析在全球生效一般需要0-72小时。</p>
-<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>这里的负载均衡只特指负载均衡的节点。DNS解析后的IP地址即对应负载均衡的IP地址，请求到达负载均衡节点后，将由负载均衡节点对请求进行转发到相应的http应用处理服务器。负载均衡节点可以设置相应转发的策略，例如最简单通过将用户的ip来hash到不同的http应用服务器来分散压力，这样的好处是可以保证每次请求都打到同一台机器上。另外负载均衡节点也会监听应用服务器，并且及时隔离掉异常状态的服务器，在服务器恢复健康后，再次接入。</p>
-<p>通过负载均衡节点接入多台应用服务器，当遇到促销等场景时，动态增加应用服务器即可满足需求。</p>
-<p>此外，我们还需要确保负载均衡节点的高可用性。通过VRRP(Virtual Router Redundancy Protocol, 虚拟路由冗余协议)保证负载均衡节点的高可用性。原理如下：<br>负载均衡节点往往由2台机器通过VIP(virtual IP，负载均衡向客户端提供服务的 IP 地址)技术向用户提供服务，两台机器同时只有一台机器保持在<code>active</code>的状态，两台机器之间通过<code>Keepalived</code>技术互相监听对方的状态，如果<code>active</code>的机器宕机，则另一台机器自动切换到<code>active</code>的状态，通过冗余来保证负载均衡节点的高可用性。</p>
-<h3 id="消息服务"><a href="#消息服务" class="headerlink" title="消息服务"></a>消息服务</h3><p>项目简单的时候，我们往往会把所有的代码耦合在一起，同步执行。诸如购买一件商品，执行下单，减库存，支付等等操作同步运行完成之后再将请求返回，造成单个请求驻留时间过长，堆积大量的请求，造成应用服务器的不可用。<br>通过消息服务，我们可以将这些服务解耦，并且通过将同步逻辑异步化，减少请求的驻留，从而减轻并发压力。用户操作产生消息，再通过建立另外的消费者进行消费。<br>我们还可以根据情况，设置消费者的策略，比如，通过拉取消息而非推送消息，来保证无论前端并发多大的流量，都可以在消息服务这里熨平，消费者根据自己的能力拉取，不至于超负荷造成服务不可用。</p>
-<h3 id="CDN配合对象存储服务"><a href="#CDN配合对象存储服务" class="headerlink" title="CDN配合对象存储服务"></a>CDN配合对象存储服务</h3><p>CDN这个技术基本上写代码的人都知道，说优化的时候大家都能提到，可是过往也一直没有真正的设置过CDN的使用，这次专门去腾讯云上查看了下配置，并了解了下策略。</p>
-<p>首先，用户准备一个域名用来作为CDN的分发域名，这里比如说<code>qian-img.tenpay.com</code>。设置<code>qian-img.tenpay.com</code>的别名<code>CNAME</code>为CDN厂商给我们提供的域名比如说<code>tenpay.com.CDN.dnsv1.com</code>，之后还需要设置源站(ip/域名)即你静态文件实际存放的机器地址。这样对<code>qian-img.tenpay.com</code>的请求都会打到对应的CDN域名上,CDN域名也会解析到最近的CDN节点上，并且递归查找资源，类似于DNS解析。当没有找到资源的时候，才会去用户设置的源站IP上去获取资源。这样对自己的静态资源源站的性能要求会大大减少，系统性能也会大大提高。</p>
-<p>而源站的资源管理上也推荐使用对象存储服务，相比与使用自己搭建服务器的文件系统。对象存储服务，也可以存储任意形式的非结构化的数据，并且高可用、高稳定、强安全。</p>
-<h3 id="Redis缓存"><a href="#Redis缓存" class="headerlink" title="Redis缓存"></a>Redis缓存</h3><p>Redis是基于内存的键值对数据库，IO性能远远高于基于文件系统的数据库。对一个接口的请求的多个请求过程中，往往数据并没有产生变化，如果每次都去数据库中去查询，则会造成数据库压力过大，同时接口性能下降，通过将数据缓存在Redis这样的内存键值对数据库中可以大大提高系统的性能。</p>
-<h3 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h3><p>常用的数据库诸如MySQL都是基于文件系统，而文件系统是基于磁盘，整个系统中，磁盘的IO可以说是最慢的一个地方。因此数据库往往是系统的性能瓶颈，分库分表，是最常用的策略。</p>
-<p>单个数据库存在并发连接数上线单位是百，因此面对海量的请求，是无能为力的。因此需要通过分库来将压力分担到不同的数据库机器上，以承载大并发的请求。分库的策略可以简单的根据用户UID的尾号进行水平拆分，同时分库后，单个数据库的记录数也减少了，读写性能也得到提高。</p>
-<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>上面所列的核心技术点，有些作者也未曾使用过，只是从理论上进行了一定的合理性推演。大半年前，在公司听后端童鞋讲解后端架构的时候，很多东西都是一脸懵逼，大半年里不断认知学习，认识上终于有不少进步。学无止境，需要去学习的还有很多~</p>
-
+<p><img src="/assets/arch/arch.png" alt="基本架构图"><br>
+        
+          <p class="article-more-link">
+            <a href="/2017/05/23/试着探索大并发下的系统架构/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
 
-
-  <!-- /赞赏代码开始 -->
-
-  <!-- css -->
-  <style type="text/css">
-      .center {
-          text-align: center;
-      }
-      .hidden {
-          display: none;
-      }
-    .donate_bar a.btn_donate{
-      display: inline-block;
-      width: 82px;
-      height: 82px;
-      background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
-      _background: url("http://7xsl28.com1.z0.glb.clouddn.com/btn_reward.gif") no-repeat;
-
-      <!-- http://img.t.sinajs.cn/t5/style/images/apps_PRF/e_media/btn_reward.gif
-           因为本 hexo 生成的博客所用的 theme 的 a:hover 带动画效果，
-         为了在让打赏按钮显示效果正常 而 添加了以下几行 css，
-         嵌入其它博客时不一定要它们。 -->
-      -webkit-transition: background 0s;
-      -moz-transition: background 0s;
-      -o-transition: background 0s;
-      -ms-transition: background 0s;
-      transition: background 0s;
-      <!-- /让打赏按钮的效果显示正常 而 添加的几行 css 到此结束 -->
-    }
-
-    .donate_bar a.btn_donate:hover{ background-position: 0px -82px;}
-    .donate_bar .donate_txt {
-      display: block;
-      color: #9d9d9d;
-      font: 14px/2 "Microsoft Yahei";
-    }
-    .bold{ font-weight: bold; }
-  </style>
-  <!-- /css -->
-
-    <!-- Donate Module -->
-    <div id="donate_module">
-
-  <!-- btn_donate & tips -->
-  <div id="donate_board" class="donate_bar center">
-    <a id="btn_donate" class="btn_donate" target="_self" href="javascript:;" title="Donate 打赏"></a>
-    <span class="donate_txt">
-      欣赏此文？求鼓励，求支持！
-    </span>
-      
-    
-  </div>
-  <!-- /btn_donate & tips -->
-
-  <!-- donate guide -->
-    
-  <div id="donate_guide" class="donate_bar center hidden">
-
-    <a href="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="用微信扫一扫哦~" class="fancybox" rel="article0">
-      <img src="http://wilsonliu.cn/cdn/img/201612/ce0b7da9bb31110c162ba7aa881daa43.JPG" title="微信打赏 Colin" height="190px" width="190px"/>
-    </a>
-        
-        &nbsp;&nbsp;
-
-    <a href="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="用支付宝扫一扫即可~" class="fancybox" rel="article0">
-      <img src="http://wilsonliu.cn/cdn/img/201612/68a5f2d6f53cf54496e1d98985e15c10.JPG" title="支付宝打赏 Colin" height="190px" width="190px"/>
-    </a>
-
-    <span class="donate_txt">
-      欣赏此文？求鼓励，求支持！
-    </span>
-
-  </div>
-  <!-- /donate guide -->
-
-  <!-- donate script -->
-  <script type="text/javascript">
-    document.getElementById('btn_donate').onclick = function() {
-      $('#donate_board').addClass('hidden');
-      $('#donate_guide').removeClass('hidden');
-    }
-
-    function donate_on_web(){
-      $('#donate').submit();
-        }
-
-    var original_window_onload = window.onload;
-        window.onload = function () {
-            if (original_window_onload) {
-                original_window_onload();
-            }
-            document.getElementById('donate_board_wdg').className = 'hidden';
-    }
-  </script>
-  <!-- /donate script -->
-</div>
-<!-- /Donate Module -->
-   
-  <!-- /赞赏代码结束 -->
 
 
 
