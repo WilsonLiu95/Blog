@@ -17,7 +17,7 @@ widgets:
 - category
 - tagcloud
 - recent_posts
-- lastest_comments
+# - lastest_comments
 - hot_comment_posts
 - archive
 - links
