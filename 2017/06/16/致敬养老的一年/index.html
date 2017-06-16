@@ -6,18 +6,36 @@
 
   <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
   
-  <title>线性表 | WilsonLiu&#39;s blog</title>
+  <title>致敬养老的一年 | WilsonLiu&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="线性表是是n个数据元素的有限序列。">
+  <meta name="description" content="大四伊始，我就给它定了个基调 —— 养老。此外，我定了三个加点方向
+
+技术 —— web前后端开发体系知识不完善，尤其是后端知识
+修身 —— 一来，该减肥了；二来，身体的健康是未来事业发展的保障
+养性 —— 广泛阅读增长见识，深邃思想，培养兴趣爱好与增强能力
+
+如今，就要毕业了，也该对这一年养老生活有个交代了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="线性表">
-<meta property="og:url" content="http://blog.wilsonliu.cn/2016/04/16/线性表/index.html">
+<meta property="og:title" content="致敬养老的一年">
+<meta property="og:url" content="http://blog.wilsonliu.cn/2017/06/16/致敬养老的一年/index.html">
 <meta property="og:site_name" content="WilsonLiu's blog">
-<meta property="og:description" content="线性表是是n个数据元素的有限序列。">
-<meta property="og:updated_time" content="2016-12-06T07:18:52.000Z">
+<meta property="og:description" content="大四伊始，我就给它定了个基调 —— 养老。此外，我定了三个加点方向
+
+技术 —— web前后端开发体系知识不完善，尤其是后端知识
+修身 —— 一来，该减肥了；二来，身体的健康是未来事业发展的保障
+养性 —— 广泛阅读增长见识，深邃思想，培养兴趣爱好与增强能力
+
+如今，就要毕业了，也该对这一年养老生活有个交代了。">
+<meta property="og:updated_time" content="2017-06-16T06:54:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="线性表">
-<meta name="twitter:description" content="线性表是是n个数据元素的有限序列。">
+<meta name="twitter:title" content="致敬养老的一年">
+<meta name="twitter:description" content="大四伊始，我就给它定了个基调 —— 养老。此外，我定了三个加点方向
+
+技术 —— web前后端开发体系知识不完善，尤其是后端知识
+修身 —— 一来，该减肥了；二来，身体的健康是未来事业发展的保障
+养性 —— 广泛阅读增长见识，深邃思想，培养兴趣爱好与增强能力
+
+如今，就要毕业了，也该对这一年养老生活有个交代了。">
   
   
     <link rel="icon" href="http://wilsonliu.cn/favicon.ico">
@@ -84,16 +102,12 @@ var _hmt = _hmt || [];
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="postcd ..-线性表" class="article article-type-postcd .." itemscope itemprop="blogPost">
+        <section id="main"><article id="postcd ..-致敬养老的一年" class="article article-type-postcd .." itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/04/16/线性表/" class="article-date">
-  <time datetime="2016-04-16T05:38:37.000Z" itemprop="datePublished">2016-04-16</time>
+    <a href="/2017/06/16/致敬养老的一年/" class="article-date">
+  <time datetime="2017-06-16T01:09:37.000Z" itemprop="datePublished">2017-06-16</time>
 </a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据结构/">数据结构</a>
-  </div>
-
   </div>
   <div class="article-inner">
     
@@ -102,7 +116,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      线性表
+      致敬养老的一年
     </h1>
   
 
@@ -110,14 +124,58 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>线性表是是n个数据元素的有限序列。<br><a id="more"></a></p>
-<h1 id="线性表的顺序表示和实现"><a href="#线性表的顺序表示和实现" class="headerlink" title="线性表的顺序表示和实现"></a>线性表的顺序表示和实现</h1><p>用一组地址连续的存储单元依次存储线性表的数据元素。 查找的时间复杂度为O(1)，但是插入和删除元素时，需要将插入或者删除以后的元素往前或往后移一个单位长度。时间复杂度为O(n)。</p>
-<h1 id="线性表的链式表示和实现"><a href="#线性表的链式表示和实现" class="headerlink" title="线性表的链式表示和实现"></a>线性表的链式表示和实现</h1><p>用一组任意的存储单元存储线性表的数据元素。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">logLinear</span>(<span class="params"></span>)</span>&#123;<span class="comment">//构造链表并输出</span></div><div class="line">  <span class="comment">// 构造链表 并输出链表的数据</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">linearNode</span>(<span class="params">value,next</span>)</span>&#123; <span class="comment">//构造函数 构造线性表的节点结构</span></div><div class="line">    <span class="keyword">this</span>.value = value;</div><div class="line">    <span class="keyword">this</span>.next = next; <span class="comment">//指向下一个节点的指针</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">var</span> linearHeadNode = <span class="keyword">new</span> linearNode(<span class="literal">null</span>), <span class="comment">//标识链表</span></div><div class="line">      node = linearHeadNode; <span class="comment">//node 用来作为存储临时结点</span></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</div><div class="line">    node.next = <span class="keyword">new</span> linearNode(i);</div><div class="line">    node = node.next;</div><div class="line">  &#125;</div><div class="line">  node = linearHeadNode;</div><div class="line">  <span class="keyword">while</span> (node.next) &#123;</div><div class="line">  <span class="built_in">console</span>.log(node.next);</div><div class="line">  node = node.next;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mathlinear</span>(<span class="params"></span>)</span>&#123; <span class="comment">//进行一元多项式的计算</span></div><div class="line">  <span class="comment">// 构造链表 并输出链表的数据</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">linearNode</span>(<span class="params">qa,qb,next</span>)</span>&#123; <span class="comment">//构造函数 构造线性表的节点结构</span></div><div class="line">    <span class="keyword">this</span>.qa = qa;</div><div class="line">    <span class="keyword">this</span>.qb = qb;</div><div class="line">    <span class="keyword">this</span>.next = next; <span class="comment">//指向下一个节点的指针</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">var</span> linearListA = <span class="keyword">new</span> linearNode(), <span class="comment">//标识链表</span></div><div class="line">      linearListB = <span class="keyword">new</span> linearNode(),</div><div class="line">      linearListC = <span class="keyword">new</span> linearNode(),</div><div class="line">      nodeC = linearListC,</div><div class="line">      nodeB = linearListB,</div><div class="line">      nodeA = linearListA; <span class="comment">//node 用来作为存储临时结点</span></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</div><div class="line">    nodeA.next = <span class="keyword">new</span> linearNode(i, i+<span class="number">3</span>);</div><div class="line">    nodeB.next = <span class="keyword">new</span> linearNode(i+<span class="number">2</span>, i+<span class="number">2</span>);</div><div class="line">    nodeA = nodeA.next;</div><div class="line">    nodeB = nodeB.next;</div><div class="line">  &#125;</div><div class="line">  nodeA = linearListA;</div><div class="line">  nodeB = linearListB;</div><div class="line">  <span class="keyword">while</span> (nodeA.next&amp;&amp;nodeB.next) &#123;</div><div class="line">    <span class="keyword">if</span> (nodeA.next.qb&lt;nodeB.next.qb) &#123;</div><div class="line">      nodeC.next = nodeA.next;</div><div class="line">      nodeC = nodeC.next;</div><div class="line">      nodeA = nodeA.next;</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (nodeA.next.qb===nodeB.next.qb) &#123;</div><div class="line">      nodeC.next = nodeA.next;</div><div class="line">      nodeC.next.qa = nodeA.next.qa+nodeB.next.qa;</div><div class="line">      nodeC = nodeC.next;</div><div class="line">      nodeB = nodeB.next;</div><div class="line">      nodeA = nodeA.next;</div><div class="line">    &#125;<span class="keyword">else</span> &#123;</div><div class="line">      nodeC.next = nodeB.next;</div><div class="line">      nodeC = nodeC.next;</div><div class="line">      nodeB = nodeB.next;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  nodeC = linearListC;</div><div class="line">  <span class="keyword">while</span> (nodeC.next) &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"系数："</span>+nodeC.next.qa +<span class="string">"指数："</span>+nodeC.next.qb);</div><div class="line">    nodeC = nodeC.next;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="循环链表"><a href="#循环链表" class="headerlink" title="循环链表"></a>循环链表</h2><p>表中最后一个结点的指针域指向头结点。由此从表中任意位置出发都可以找到表中其他结点。</p>
-<h2 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h2><p>双向链表的结点中有两个指针域，其一指向直接后继，另一指向直接前继。</p>
-<p><strong>由于链表在空间的合理利用上和插入，删除时不需要移动等优点，因此在许多场合，她是线性表的首选存储结构</strong></p>
+        <p>大四伊始，我就给它定了个基调 —— 养老。<br>此外，我定了三个加点方向</p>
+<ol>
+<li>技术 —— web前后端开发体系知识不完善，尤其是后端知识</li>
+<li>修身 —— 一来，该减肥了；二来，身体的健康是未来事业发展的保障</li>
+<li>养性 —— 广泛阅读增长见识，深邃思想，培养兴趣爱好与增强能力</li>
+</ol>
+<p>如今，就要毕业了，也该对这一年养老生活有个交代了。<br><a id="more"></a></p>
+<h2 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h2><p>这一年技术的成长主要在于</p>
+<ul>
+<li>语言方面：进一步熟悉PHP、简单使用Python、了解C++</li>
+<li>项目方面：简账、Kmark(重构)、毕设互选系统、专业课选课系统、慧眼项目</li>
+<li>知识体系：初步建立了整个web开发架构体系的知识轮廓</li>
+<li>新的兴趣：探索区块链相关技术</li>
+</ul>
+<h3 id="项目经历"><a href="#项目经历" class="headerlink" title="项目经历"></a>项目经历</h3><h4 id="纯前端练手项目——简账"><a href="#纯前端练手项目——简账" class="headerlink" title="纯前端练手项目——简账"></a>纯前端练手项目——简账</h4><p>回来后，找童鞋设计了一下，自己做了一个webapp版本的记账应用<a href="http://jianzhang.wilsonliu.cn/FrontEnd/dist/#!/" target="_blank" rel="external">“简账”</a>，<a href="https://github.com/WilsonLiu95/jianzhang" target="_blank" rel="external">简账github</a>本想带上数据同步的，但后来感觉麻烦(主要是后端水平太差，没有独立完成过项目)，于是放弃了这个想法。<br>前前后后拖拖拉拉花了2个月时间，通过这个项目，一来熟悉了Vue.js这个框架；二来认清楚了要完成一个产品级的应用确实需要很多时间精力，重点是对细节的把控，一个人终究还是粗大条。<br>最后上线了这个应用，收到过1个用户的赞许(说设计风格很好，应用很简单粗暴)；不过这样一个应用真的不能被实际使用，数据存储在本地，没准哪天就丢了~嘎嘎。</p>
+<h4 id="Kmark重构"><a href="#Kmark重构" class="headerlink" title="Kmark重构"></a>Kmark重构</h4><p>老版的Kmark是我用Angular的花了4天时间写的，没有设计惨不忍睹。经常被骂，所以这一次找了个设计妹纸帮忙设计了一下。并且添加了后台统计功能与用户系统。<a href="http://kmark.wilsonliu.cn/kmark/FrontEnd/dist/#/home" target="_blank" rel="external">kmark</a></p>
+<h4 id="毕设-——-两套选课系统"><a href="#毕设-——-两套选课系统" class="headerlink" title="毕设 —— 两套选课系统"></a>毕设 —— 两套选课系统</h4><p>毕设的时间战线拉得比较长，因为要独立完成整个选课系统，包括前端后台，PC与微信端。一开始还是感到巨大的压力的，因此在11.24日我开始搬进了实验室，首先因为想尝试新的PHP框架Laravel(之前在公司只用过CI)，所以首先进行了技术储备，花了大半个月进行相关的技术学习。之后前前后后花了2个多月时间完成了两个系统。</p>
+<p>这次毕设是我第一次完整的经历整个应用流程体系，同时因为选课的特殊性让我积极学习高并发架构的设计知识，让我使用了Redis、队列等后端新的技术，让我整个开发水平得到了很大的提高。</p>
+<ul>
+<li><a href="https://github.com/WilsonLiu95/bishe" target="_blank" rel="external">毕设互选系统 github</a></li>
+<li><a href="https://github.com/WilsonLiu95/select-course-system" target="_blank" rel="external">专业课选课系统 github</a></li>
+</ul>
+<h4 id="慧眼项目"><a href="#慧眼项目" class="headerlink" title="慧眼项目"></a>慧眼项目</h4><p>慧眼项目是实验室的项目，让我借此学习了一下python，我负责了视频处理服务器与web服务器的数据同步工作，并且进行了整体的数据结构设计。发现对真实问题的建模并且将问题低耦合的解决很让人开心(特别是在开发过程中，问题的不断更改，良好的设计使得我的代码基本没有因此需要进行大改)。同时，因为这次数据量比较大，所以通过这次加深了对多线程与多进程的认识。</p>
+<h4 id="项目总结"><a href="#项目总结" class="headerlink" title="项目总结"></a>项目总结</h4><p>通过上面的一系列项目，我的实践水平得到的很大的提高，前后端水平在这一年里也获得了不小的提升(虽然感觉前端进步会小很多。。。羞愧)。特别是后端和架构的设计方面，感觉真的获得的很大很大的提升。给自己的定位是个前端工程师，再上是个web应用工程师，再上应该是个工程师。这让我从离web应用工程师更近了一步。</p>
+<h3 id="区块链"><a href="#区块链" class="headerlink" title="区块链"></a>区块链</h3><p>很幸运，在前端行业火热的时间入坑了。前端虽热，但是并不算是前沿高科技，更多的是工程应用技术，本职工作之外，也想玩点什么~<br>看到深造的同学们一个个搞着前沿科技，我也想趟趟浑水。于是最近对一些当下热门的技术都进行了一定的了解，结合自身对金融抱有一定的兴趣与自己本身也处在互联网金融这个行当中，因此选中了区块链这样一个兴趣点，希望未来能够持续的对这方面加深认识。<br>毕业前阅读了一下<a href="http://zhibimo.com/read/wang-miao/mastering-bitcoin/Preface.html" target="_blank" rel="external">《精通比特币》</a>这本书，初步认识了整个比特币的技术原理，未来~再加油</p>
+<h2 id="修身"><a href="#修身" class="headerlink" title="修身"></a>修身</h2><p>修身还是这一年的主节奏！！！ </p>
+<ul>
+<li>减肥：历经九九八十一天磨难减了30斤，之后继续努力峰值减了40斤</li>
+<li>跑马：参加了两次半马，取得了不错的成绩</li>
+<li>游泳：学会了游泳，修得了一项愉悦身心的技术</li>
+<li>健身：初步入门健身，开始出现身体线条和胸肌</li>
+<li>骑行：单日140KM长距离拉练，环海南岛东线长途骑行</li>
+<li>形象：换发型去掉了刘海，戴上了隐形眼镜</li>
+</ul>
+<h3 id="减肥与塑身"><a href="#减肥与塑身" class="headerlink" title="减肥与塑身"></a>减肥与塑身</h3><p>一直想就此专门写篇文章，可是这个故事也只讲了一大半，却还没有个很好的结尾，腹肌与胸型没出来。</p>
+<p>这里就先简单的回顾总结一下吧，希望能够有这个机会，给这个故事划上完美的句号。</p>
+<h4 id="减肥"><a href="#减肥" class="headerlink" title="减肥"></a>减肥</h4><p>实习刚回来166斤，自己都感到看不下去了~<br>给自己定了一个九九八十一天减肥计划，最后成功减到135斤。</p>
+<p>从刚回来只能跑2圈休息1圈；到后来第一次尝试10KM，腿与膝盖疼了2个星期；寒假的时候坚持每天跑步5-10KM,并且第一次咬牙跑路一次21KM；本学期终于完成了2次半马，取得了自己满意的成绩。</p>
+<p>跑马这个目标，刚开始为了逼迫自己跑步减肥，突发奇想就确定了毕业前完成一次半马，当时看来，真是可怕(好吧，哪怕是现在每次跑之前我也是感觉有点虚的)</p>
+<p>另外，为了减肥，找了个私教学游泳，参与远距离骑行活动，保持健身，真是一切为了减肥。 </p>
+<p>每天三餐保持清汤寡水，分量减半，想想也是可怜，啃个馒头就着青菜。</p>
+<h4 id="健身"><a href="#健身" class="headerlink" title="健身"></a>健身</h4><p>健身其实从大二暑假就开始了，练的都是固定的器械，每次去一种划水的感觉。3.11号看着自己瘦到谷底125斤，去UA买了一套紧身衣给自己(想买很久了~好不好！！！)，激励自己开始增肌。估计是穿的专业但是动作很水~哈哈 4.18日被私教搭讪了，成功的推销了课程。</p>
+<p>不过很幸运这个私教很专业，在他的指导下，2个月后，穿UA时腹部那一圈明显的赘肉也不见了，胸肌硬起来了，手臂也粗壮了，身形更加明显了，嘿嘿，体重也增加了几斤，但是看着体重增加再也不慌了~</p>
+<p>未来，继续健身，希望看到更完美的身形。</p>
+<h2 id="养性"><a href="#养性" class="headerlink" title="养性"></a>养性</h2><p>养性方面是做的最差的一部分了~ </p>
+<ul>
+<li>读书：开始的时候收集全校偏文院系的课表，蹭了蹭课；之后借了经济学的教材读了3-4本，系统的提高了一些认识；之后比较浮躁，只有偶尔去图书馆看看社会哲学相关的书籍</li>
+<li>旅游：10.1 重庆成都游玩，看九寨沟；11月去黄山只看到雾；12月东北游，冰雪大世界与雪乡；1月海南岛东线骑行；4月南京第一次半马，5月洛阳第二次半马；毕旅，环青海湖自驾与西藏</li>
+<li>音乐：做的很糟~ 上了声乐课，帮助我唱歌找的到调了，吉他上了2节课就放弃了(果然还是得着one to one的)</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>列完清单后，发现这一年养老生活真是多姿多彩，收获很大。在哪方面都取得很不错的成绩(就是很多时候确实太闲了点)</p>
+<p>未来，希望像今年一样充实~</p>
 
       
     </div>
@@ -225,13 +283,13 @@ var _hmt = _hmt || [];
 
 
 
-      <a data-url="http://blog.wilsonliu.cn/2016/04/16/线性表/" data-id="cj3zf0r3d002gotu0tv144c5s" class="article-share-link">分享</a>
+      <a data-url="http://blog.wilsonliu.cn/2017/06/16/致敬养老的一年/" data-id="cj3zf0r3i002motu0t3xm5yme" class="article-share-link">分享</a>
       
-        <a href="http://blog.wilsonliu.cn/2016/04/16/线性表/#ds-thread" class="article-comment-link">留言</a>
+        <a href="http://blog.wilsonliu.cn/2017/06/16/致敬养老的一年/#ds-thread" class="article-comment-link">留言</a>
       
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大四-养老/">大四 养老</a></li></ul>
 
     </footer>
   </div>
@@ -239,19 +297,10 @@ var _hmt = _hmt || [];
     
 <nav id="article-nav">
   
-    <a href="/2016/04/17/栈和队列/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          栈和队列
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/04/15/树和二叉树/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/05/23/试着探索高并发下的系统面貌/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">树和二叉树</div>
+      <div class="article-nav-title">试着探索高并发下的系统架构面貌</div>
     </a>
   
 </nav>
@@ -262,7 +311,7 @@ var _hmt = _hmt || [];
 
       <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/04/16/线性表/" data-title="线性表" data-url="http://blog.wilsonliu.cn/2016/04/16/线性表/"></div>
+	<div class="ds-thread" data-thread-key="2017/06/16/致敬养老的一年/" data-title="致敬养老的一年" data-url="http://blog.wilsonliu.cn/2017/06/16/致敬养老的一年/"></div>
 	<!-- 多说评论框 end -->
 </div>
 
